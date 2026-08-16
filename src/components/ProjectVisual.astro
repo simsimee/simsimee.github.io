@@ -1,0 +1,123 @@
+---
+import type { Project } from '@/data/projects';
+
+type Props = { project: Project };
+const { project } = Astro.props;
+
+const dlaResults = [
+  { model: 'YOLOv13', baseline: 0.7375, proposed: 0.8049 },
+  { model: 'RF-DETR', baseline: 0.639, proposed: 0.6951 }
+];
+---
+
+{project.slug === 'dla' && (
+  <figure class="project-visual project-visual--dla" aria-labelledby="dla-visual-title">
+    <figcaption id="dla-visual-title">
+      <span>공개 벤치마크</span>
+      <strong>DocLayNet 3개 도메인 평균 mAP@50:95</strong>
+    </figcaption>
+    <div class="bar-comparison">
+      {dlaResults.map((result) => (
+        <div class="bar-comparison__group">
+          <p>{result.model}</p>
+          <div class="bar-comparison__row">
+            <span>Baseline</span>
+            <div class="bar-comparison__track"><i style={`--bar-size:${result.baseline * 100}%`}></i></div>
+            <b>{result.baseline.toFixed(4)}</b>
+          </div>
+          <div class="bar-comparison__row is-proposed">
+            <span>제안 방법</span>
+            <div class="bar-comparison__track"><i style={`--bar-size:${result.proposed * 100}%`}></i></div>
+            <b>{result.proposed.toFixed(4)}</b>
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="project-visual__note">Financial Reports · Government Tenders · Science Articles 평균</p>
+  </figure>
+)}
+
+{project.slug === 'data-centric-detection' && (
+  <figure class="project-visual project-visual--selection" aria-labelledby="selection-visual-title">
+    <figcaption id="selection-visual-title">
+      <span>데이터 선택의 효과</span>
+      <strong>적은 데이터로 더 높은 성능을 만든 구성</strong>
+    </figcaption>
+    <div class="selection-compare">
+      <div class="selection-compare__item">
+        <p>무작위 구성</p>
+        <div class="selection-dots" aria-label="13만 장">
+          {Array.from({ length: 13 }).map(() => <i></i>)}
+        </div>
+        <strong>13만 장</strong>
+        <span>mAP 0.64</span>
+      </div>
+      <div class="selection-compare__arrow" aria-hidden="true">→</div>
+      <div class="selection-compare__item is-selected">
+        <p>조건 기반 최적화</p>
+        <div class="selection-dots" aria-label="8만 장">
+          {Array.from({ length: 8 }).map(() => <i></i>)}
+        </div>
+        <strong>8만 장</strong>
+        <span>mAP 0.85</span>
+      </div>
+    </div>
+    <p class="project-visual__note">수량이 아니라 정보량·다양성·희소 조건 커버리지를 선택 기준으로 사용</p>
+  </figure>
+)}
+
+{project.slug === 'ocr' && (
+  <figure class="project-visual project-visual--ocr" aria-labelledby="ocr-visual-title">
+    <figcaption id="ocr-visual-title">
+      <span>표현 방식의 차이</span>
+      <strong>작성 중 손글씨를 완성된 문장으로 오판하지 않기</strong>
+    </figcaption>
+    <div class="tokenizer-compare">
+      <div>
+        <p>관측된 입력</p>
+        <strong class="handwriting-sample">듣고 이해하</strong>
+      </div>
+      <div class="tokenizer-compare__case is-risk">
+        <span>BPE</span>
+        <strong>듣고 이해하였음</strong>
+        <small>미관측 토큰 자동 완성</small>
+      </div>
+      <div class="tokenizer-compare__case is-safe">
+        <span>Character-level</span>
+        <strong>듣고 이해하</strong>
+        <small>관측된 글자만 출력</small>
+      </div>
+    </div>
+  </figure>
+)}
+
+{project.slug === '3d-marine' && (
+  <figure class="project-visual project-visual--crop" aria-labelledby="crop-visual-title">
+    <figcaption id="crop-visual-title">
+      <span>모델 제약을 우회한 좌표 설계</span>
+      <strong>고정 512 입력으로 4K 원본을 보존하는 과정</strong>
+    </figcaption>
+    <ol class="crop-flow">
+      <li><span>01</span><b>3840×2160 원본</b><small>전역 bbox</small></li>
+      <li><span>02</span><b>512 중심 crop</b><small>경계 이동·padding</small></li>
+      <li><span>03</span><b>Local Coordinates</b><small>Diffusion Inference</small></li>
+      <li><span>04</span><b>원본 위치 복원</b><small>외부 픽셀 보존</small></li>
+    </ol>
+    <div class="crop-frame" aria-hidden="true"><i></i><em></em></div>
+  </figure>
+)}
+
+{project.slug === 'character-pipeline' && (
+  <figure class="project-visual project-visual--gate" aria-labelledby="gate-visual-title">
+    <figcaption id="gate-visual-title">
+      <span>생성 이후의 품질 설계</span>
+      <strong>Rule Check를 우선 배치한 2-stage Quality Gate</strong>
+    </figcaption>
+    <div class="gate-flow">
+      <div><span>생성</span><b>구조화 스타일 적용</b><small>#00FF00 배경</small></div>
+      <div><span>1차</span><b>로컬 알파 검사</b><small>투명 픽셀 ≥ 20%</small></div>
+      <div><span>2차</span><b>AI Quality Review</b><small>7 criteria · PASS / FAIL</small></div>
+      <div class="is-output"><span>결과</span><b>통과 결과만 저장</b><small>투명 배경 최종본</small></div>
+    </div>
+  </figure>
+)}

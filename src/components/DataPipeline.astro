@@ -1,0 +1,96 @@
+---
+import { pipelineStages } from '@/data/site';
+import { projects } from '@/data/projects';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const href = (path: string) => `${base}${path}`;
+---
+
+<div class="data-pipeline" data-pipeline>
+  <div class="data-pipeline__track" role="tablist" aria-label="Data-Centric 문제 해결 단계">
+    {pipelineStages.map((stage, index) => (
+      <button
+        class="data-pipeline__stage"
+        type="button"
+        role="tab"
+        aria-selected={index === 0 ? 'true' : 'false'}
+        tabindex={index === 0 ? 0 : -1}
+        aria-controls={`pipeline-panel-${stage.key}`}
+        id={`pipeline-tab-${stage.key}`}
+        data-stage={stage.key}
+      >
+        <span class="data-pipeline__number">{stage.number}</span>
+        <strong>{stage.title}</strong>
+        <span>{stage.question}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="data-pipeline__panels">
+    {pipelineStages.map((stage, index) => {
+      const related = projects.filter((project) => project.stages.includes(stage.key));
+      return (
+        <section
+          class="data-pipeline__panel"
+          id={`pipeline-panel-${stage.key}`}
+          role="tabpanel"
+          aria-labelledby={`pipeline-tab-${stage.key}`}
+          hidden={index !== 0}
+          data-panel={stage.key}
+        >
+          <div>
+            <p class="data-pipeline__panel-label">Focus</p>
+            <p class="data-pipeline__panel-copy">{stage.description}</p>
+          </div>
+          <div>
+            <p class="data-pipeline__panel-label">Related Projects</p>
+            <ul class="data-pipeline__project-links">
+              {related.map((project) => (
+                <li>
+                  <a href={href(`/projects/${project.slug}/`)}>
+                    <span>{project.shortTitle}</span>
+                    <small>{project.role}</small>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-pipeline]').forEach((pipeline) => {
+    const tabs = Array.from(pipeline.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(pipeline.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+
+    function selectTab(tab: HTMLButtonElement) {
+      const key = tab.getAttribute('data-stage');
+      tabs.forEach((item) => {
+        const isSelected = item === tab;
+        item.setAttribute('aria-selected', String(isSelected));
+        item.tabIndex = isSelected ? 0 : -1;
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.getAttribute('data-panel') !== key;
+      });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let next = index;
+        if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+        if (event.key === 'Home') next = 0;
+        if (event.key === 'End') next = tabs.length - 1;
+        tabs[next].focus();
+        selectTab(tabs[next]);
+      });
+    });
+  });
+</script>

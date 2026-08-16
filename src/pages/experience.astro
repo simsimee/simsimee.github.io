@@ -1,0 +1,98 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+
+const experiences = [
+  {
+    company: '셀렉트스타',
+    role: 'AI 1팀 · AI Research Engineer',
+    period: '2024.05 — 현재',
+    description: '저자원 데이터 문제 해결. Synthetic Data·Generation·Evaluation Pipeline 및 멀티모달 학습 데이터 개발.',
+    work: [
+      ['한글 손글씨 OCR', '합성 데이터 생성기, TrOCR 학습·평가, character-level 토크나이저'],
+      ['문서 레이아웃 합성 증강', 'KDE 기반 분포 모델링, 자동 라벨 생성, YOLOv13·RF-DETR 비교 평가'],
+      ['개인화 캐릭터 생성 PoC', '구조화 스타일 추출, 이미지 생성, 로컬·AI 품질 게이트'],
+      ['멀티모달 학습 데이터셋', 'Reasoning·QA 생성 파이프라인, 검수 통과율 58% → 86%'],
+      ['정찰용 무인수상정 체계', '3D 객체 생성, 고해상도 합성, 내부 활용 데이터 10,000건']
+    ]
+  },
+  {
+    company: '에이모 (AIMMO)',
+    role: '자율주행팀 · 연구원',
+    period: '2021.12 — 2023.10',
+    description: '자율주행 Object Detection을 위한 데이터 조건 정의. Active Collection·Dataset Optimization·Curation Tool 개발.',
+    work: [
+      ['객체 탐지 데이터 최적화', '데이터 40% 절감, mAP 0.64 → 0.85, 총 26만 장 데이터셋 구축 기여'],
+      ['능동 학습 수집 시스템', '수집 기간 5일 → 2일, 정제 비용 약 50% 절감'],
+      ['임베딩 기반 큐레이션', 'ResNet·FAISS·FiftyOne 프로토타입, 정제 효율 약 30% 향상']
+    ],
+    note: '2023년 상반기 성과우수자'
+  }
+];
+
+const patents = [
+  ['제10-2876384호', '한글 손글씨 OCR 관련 특허'],
+  ['제10-2899199호', '문서레이아웃 학습을 위한 합성데이터의 생성 방법']
+];
+---
+
+<BaseLayout title="경력 · 심민우 포트폴리오" description="AI 엔지니어 심민우의 경력, 특허, 강의와 교육 경험입니다.">
+  <header class="subpage-hero page-shell">
+    <p class="subpage-hero__eyebrow">Experience</p>
+    <h1>Data Selection에서<br />Production Pipeline으로</h1>
+    <p>도메인보다 데이터 문제의 정의·검증·운영 범위 확장에 초점을 둔 경력.</p>
+  </header>
+
+  <section class="page-section page-shell experience-section">
+    <SectionHeading index="01" label="Experience" title="업무 경험" />
+    <div class="experience-list">
+      {experiences.map((experience) => (
+        <article class="experience-item">
+          <header>
+            <div><h2>{experience.company}</h2><p>{experience.role}</p></div>
+            <div><span>{experience.period}</span>{experience.note && <small>{experience.note}</small>}</div>
+          </header>
+          <p class="experience-item__description">{experience.description}</p>
+          <div class="experience-work">
+            {experience.work.map(([title, detail]) => (
+              <div><strong>{title}</strong><p>{detail}</p></div>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-section page-shell credential-section">
+    <SectionHeading index="02" label="Credentials" title="특허·강의·교육" />
+    <div class="credential-grid">
+      <div>
+        <p class="micro-label">특허</p>
+        <ul>{patents.map(([number, title]) => <li><span>{number}</span><strong>{title}</strong></li>)}</ul>
+      </div>
+      <div>
+        <p class="micro-label">강의</p>
+        <ul>
+          <li><span>2025.08</span><strong>한경국립대 · 딥러닝/머신러닝 입문 22시간</strong></li>
+          <li><span>2026.01</span><strong>한경국립대 · 머신러닝/딥러닝 실전 트레이닝 22시간</strong></li>
+        </ul>
+      </div>
+      <div>
+        <p class="micro-label">교육</p>
+        <ul>
+          <li><span>2021</span><strong>코드스테이츠 AI Bootcamp 2기</strong></li>
+          <li><span>2020</span><strong>파이썬 활용 인공지능 이론과 실습 · 160시간</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section page-shell education-section">
+    <SectionHeading index="03" label="Education" title="교육 배경" />
+    <div class="education-entry">
+      <span>2014.03 — 2021.02</span>
+      <div><h2>인제대학교</h2><p>전자IT기계자동차공학부 · 창의전자 전공 학사</p></div>
+      <p>2020학년도 창의전자 학생회장 · 지역선도대학 현장실습생 선발</p>
+    </div>
+  </section>
+</BaseLayout>

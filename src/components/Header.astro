@@ -1,0 +1,65 @@
+---
+import { siteProfile } from '@/data/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const href = (path: string) => `${base}${path}` || '/';
+const path = Astro.url.pathname;
+const navItems = [
+  { label: '프로젝트', href: '/#projects' },
+  { label: 'Workflow', href: '/#perspective' },
+  { label: '경력', href: '/experience/' },
+  { label: 'Profile', href: '/about/' }
+];
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner page-shell">
+    <a class="site-mark" href={href('/')} aria-label={`${siteProfile.name} 포트폴리오 홈`}>
+      <span class="site-mark__name">{siteProfile.name}</span>
+      <span class="site-mark__role">AI / ML 엔지니어</span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="primary-navigation"
+      data-menu-toggle
+    >
+      <span>메뉴</span>
+      <span class="menu-toggle__line" aria-hidden="true"></span>
+    </button>
+
+    <nav id="primary-navigation" class="primary-nav" aria-label="주요 메뉴" data-navigation>
+      {navItems.map((item) => (
+        <a
+          href={href(item.href)}
+          aria-current={!item.href.includes('#') && path.includes(item.href.replaceAll('/', '')) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector('[data-site-header]');
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const navigation = document.querySelector('[data-navigation]');
+
+  if (header && toggle && navigation) {
+    toggle.addEventListener('click', () => {
+      const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+      header.toggleAttribute('data-menu-open', !isOpen);
+    });
+
+    navigation.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        header.removeAttribute('data-menu-open');
+      });
+    });
+  }
+</script>

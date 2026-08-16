@@ -1,0 +1,16 @@
+---
+import { pipelineStages } from '@/data/site';
+import type { PipelineStage } from '@/data/projects';
+
+type Props = { active: PipelineStage[] };
+const { active } = Astro.props;
+---
+
+<div class="project-stage-map" aria-label="이 프로젝트에서 수행한 Data-Centric 단계">
+  {pipelineStages.map((stage) => (
+    <div class:list={['project-stage-map__item', { 'is-active': active.includes(stage.key) }]}>
+      <span>{stage.number}</span>
+      <strong>{stage.title}</strong>
+    </div>
+  ))}
+</div>

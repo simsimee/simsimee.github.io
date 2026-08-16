@@ -1,0 +1,24 @@
+---
+import { siteProfile } from '@/data/site';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resumeHref = `${base}/${siteProfile.resumePath}`;
+---
+
+<footer class="site-footer">
+  <div class="page-shell site-footer__grid">
+    <div>
+      <p class="section-index">contract</p>
+      <p class="site-footer__statement">contract</p>
+    </div>
+    <div class="site-footer__links">
+      <a href={`mailto:${siteProfile.email}`}>{siteProfile.email}</a>
+      <a href={resumeHref} download>이력서 PDF 내려받기</a>
+      {siteProfile.github && <a href={siteProfile.github} rel="noreferrer">GitHub 보기</a>}
+    </div>
+  </div>
+  <div class="page-shell site-footer__bottom">
+    <span>© 2026 심민우</span>
+    <span>Data-Centric AI Portfolio</span>
+  </div>
+</footer>

@@ -1,0 +1,207 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectVisual from '@/components/ProjectVisual.astro';
+import ProjectStageMap from '@/components/ProjectStageMap.astro';
+import ProjectNavigation from '@/components/ProjectNavigation.astro';
+import { projects, type Project } from '@/data/projects';
+import { compactCopy } from '@/utils/copy';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+type Props = { project: Project };
+const { project } = Astro.props;
+---
+
+<BaseLayout
+  title={`${project.shortTitle} · 심민우 포트폴리오`}
+  description={project.intro}
+  eyebrow={project.category}
+>
+  <article class:list={['case-study', `case-study--${project.slug}`]}>
+    <header class="case-hero page-shell">
+      <div class="case-hero__index">
+        <span>프로젝트 {String(project.order).padStart(2, '0')}</span>
+        <p>{project.category}</p>
+      </div>
+      <div class="case-hero__title">
+        <h1>{project.title}</h1>
+        <p>{compactCopy(project.intro)}</p>
+      </div>
+      <p class="case-hero__impact"><span>Impact</span>{project.resultLine}</p>
+      <div class="case-metric-grid case-metric-grid--hero">
+        {project.metrics.map((metric) => (
+          <div class="case-metric">
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
+            <p>{metric.context}</p>
+          </div>
+        ))}
+      </div>
+      <dl class="case-hero__facts">
+        <div><dt>Period</dt><dd>{project.period}</dd></div>
+        <div><dt>My Role</dt><dd>{project.role}</dd></div>
+        <div><dt>Stack</dt><dd>{project.stacks.slice(0, 5).join(' · ')}</dd></div>
+      </dl>
+      <ProjectStageMap active={project.stages} />
+    </header>
+
+    <nav class="case-local-nav" aria-label="프로젝트 페이지 목차">
+      <div class="page-shell">
+        <a href="#overview">Overview</a>
+        <a href="#problem">Problem</a>
+        <a href="#approach">Approach</a>
+        <a href="#implementation">Implementation</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#reflection">Reflection</a>
+      </div>
+    </nav>
+
+    <section id="overview" class="case-section page-shell case-overview">
+      <div class="case-section__head">
+        <span>01</span>
+        <div><p>Overview</p><h2>Project at a glance</h2></div>
+      </div>
+      <dl class="overview-brief">
+        <div><dt>Problem</dt><dd>{compactCopy(project.dataProblem.title)}</dd></div>
+        <div><dt>Approach</dt><dd>{project.alternatives.filter((item) => item.selected).map((item) => item.name).join(' · ')}</dd></div>
+        <div><dt>My Work</dt><dd>{project.role}</dd></div>
+      </dl>
+      <div class="overview-visual">
+        <ProjectVisual project={project} />
+      </div>
+      <div class="stack-line">
+        <span>Full Stack</span>
+        <ul>{project.stacks.map((stack) => <li>{stack}</li>)}</ul>
+      </div>
+    </section>
+
+    <section id="problem" class="case-section page-shell">
+      <div class="case-section__head">
+        <span>02</span>
+        <div><p>Problem</p><h2>성능 저하의 원인</h2></div>
+      </div>
+      <div class="editorial-columns">
+        <div class="serif-statement">
+          <p>{compactCopy(project.dataProblem.title)}</p>
+        </div>
+        <ul class="context-list">{project.context.map((item) => <li>{compactCopy(item)}</li>)}</ul>
+      </div>
+      <div class="data-diagnosis">
+        <div>
+          <p class="micro-label">Data Diagnosis</p>
+          <h3>{compactCopy(project.dataProblem.title)}</h3>
+          <p>{compactCopy(project.dataProblem.description)}</p>
+        </div>
+        <ul>
+          {project.dataProblem.signals.map((signal) => <li>{signal}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section id="approach" class="case-section case-section--tinted">
+      <div class="page-shell">
+        <div class="case-section__head">
+          <span>03</span>
+          <div><p>Approach</p><h2>대안 비교와 선택 근거</h2></div>
+        </div>
+        <div class="alternative-table" role="table" aria-label="검토한 접근 방법">
+          {project.alternatives.map((alternative) => (
+            <div class:list={['alternative-table__row', { 'is-selected': alternative.selected }]} role="row">
+              <strong role="cell">{alternative.name}</strong>
+              <p role="cell">{compactCopy(alternative.limitation)}</p>
+              <span role="cell">{alternative.selected ? 'Selected' : 'Considered'}</span>
+            </div>
+          ))}
+        </div>
+        <div class="project-pipeline">
+          <p class="micro-label">Project Pipeline</p>
+          <ol>
+            {project.pipeline.map((step, index) => (
+              <li>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <strong>{step.title}</strong>
+                <p>{compactCopy(step.detail)}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="implementation" class="case-section page-shell">
+      <div class="case-section__head">
+        <span>04</span>
+        <div><p>Implementation</p><h2>핵심 설계 결정과 담당 범위</h2></div>
+      </div>
+      <div class="decision-list">
+        {project.decisions.map((decision) => (
+          <article class="decision-item">
+            <header><span>{decision.number}</span><h3>{decision.title}</h3></header>
+            <div class="decision-item__grid">
+              <div><b>Problem</b><p>{compactCopy(decision.problem)}</p></div>
+              <div><b>Decision</b><p>{compactCopy(decision.solution)}</p></div>
+              <div><b>Impact</b><p>{compactCopy(decision.effect)}</p></div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="contribution-grid">
+        <div>
+          <p class="micro-label">Owned</p>
+          <ul>{project.contributions.direct.map((item) => <li>{item}</li>)}</ul>
+        </div>
+        <div>
+          <p class="micro-label">Reused</p>
+          <ul>{project.contributions.reused.map((item) => <li>{item}</li>)}</ul>
+        </div>
+        <div>
+          <p class="micro-label">Collaboration</p>
+          <ul>{project.contributions.collaboration.map((item) => <li>{item}</li>)}</ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidence" class="case-section case-section--ink">
+      <div class="page-shell">
+        <div class="case-section__head">
+          <span>05</span>
+          <div><p>Evidence</p><h2>실험 조건과 확인된 결과</h2></div>
+        </div>
+        <div class="evidence-grid">
+          <div>
+            <p class="micro-label">Experiment Setup</p>
+            <ol>{project.experiment.map((item) => <li>{compactCopy(item)}</li>)}</ol>
+          </div>
+          <div>
+            <p class="micro-label">Findings</p>
+            <ol>{project.findings.map((item) => <li>{compactCopy(item)}</li>)}</ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reflection" class="case-section page-shell">
+      <div class="case-section__head">
+        <span>06</span>
+        <div><p>Reflection</p><h2>한계와 다음 검증 항목</h2></div>
+      </div>
+      <div class="reflection-grid">
+        <div>
+          <p class="micro-label">Limitations</p>
+          <ul>{project.limitations.map((item) => <li>{compactCopy(item)}</li>)}</ul>
+        </div>
+        <div>
+          <p class="micro-label">Next Experiments</p>
+          <ul>{project.nextSteps.map((item) => <li>{item}</li>)}</ul>
+        </div>
+      </div>
+      <p class="honesty-note">Measured result와 미측정 효과를 구분해 기록.</p>
+    </section>
+
+    <div class="page-shell">
+      <ProjectNavigation currentSlug={project.slug} />
+    </div>
+  </article>
+</BaseLayout>
