@@ -6,6 +6,16 @@ export type ProjectMetric = {
   context: string;
 };
 
+export type ProjectArtifact = {
+  src: string;
+  title: string;
+  caption: string;
+  alt: string;
+  width: number;
+  height: number;
+  featured?: boolean;
+};
+
 export type Project = {
   slug: string;
   order: number;
@@ -19,6 +29,7 @@ export type Project = {
   stacks: string[];
   stages: PipelineStage[];
   metrics: ProjectMetric[];
+  artifacts?: ProjectArtifact[];
   context: string[];
   dataProblem: {
     title: string;
@@ -70,6 +81,33 @@ export const projects: Project[] = [
       { value: '+8.81', label: '최대 mAP points', context: 'YOLOv13 · Financial Reports · baseline 대비' },
       { value: '2 × 3', label: '모델 × 공개 도메인', context: '두 아키텍처, 세 도메인에서 비교 방법 중 Top-1' },
       { value: '400 → 2,400', label: '도메인별 학습 샘플', context: '원본 400장과 합성 2,000장' }
+    ],
+    artifacts: [
+      {
+        src: '/images/projects/dla/doclaynet-results.png',
+        title: 'DocLayNet 공개 데이터셋 결과',
+        caption: 'Financial Reports·Government Tenders·Science Articles에서 두 탐지 모델의 비교 증강 성능을 정리한 결과표.',
+        alt: 'DocLayNet 3개 도메인에서 YOLOv13과 RF-DETR 증강 방법별 mAP를 비교한 결과표',
+        width: 1210,
+        height: 985,
+        featured: true
+      },
+      {
+        src: '/images/projects/dla/pipeline.png',
+        title: 'Layout-aware 합성 파이프라인',
+        caption: 'Asset Mining, Layout Modeling, Semantic Asset Selection, Page Composition으로 이어지는 전체 설계.',
+        alt: '저자원 라벨 문서에서 자산을 추출하고 레이아웃 분포를 모델링해 합성 문서를 생성하는 파이프라인',
+        width: 1151,
+        height: 631
+      },
+      {
+        src: '/images/projects/dla/augmentation-examples.png',
+        title: '기존 증강 적용 사례',
+        caption: '무작위 혼합이 문서 구조와 의미 단위를 훼손하는 사례.',
+        alt: '혼합 기반 문서 증강이 적용된 네 가지 예시',
+        width: 1142,
+        height: 482
+      }
     ],
     context: [
       '금융·공공·과학 문서는 민감정보로 인해 수집·공유·외부 라벨링이 어렵습니다.',
@@ -229,6 +267,41 @@ export const projects: Project[] = [
       { value: '116 → 2,498', label: '실사용 이미지', context: '초기 보유 수량에서 프로젝트 기간 중 확대' },
       { value: '31,900', label: '합성 손글씨 이미지', context: '폰트 기반 생성 데이터셋' },
       { value: '0.07초', label: '평균 추론 시간', context: '최소 0.04초 · 최대 0.1초' }
+    ],
+    artifacts: [
+      {
+        src: '/images/projects/ocr/prediction-cases.png',
+        title: 'CustomTokenizer 추론 결과',
+        caption: '기존 TrOCR와 character-level tokenizer 적용 모델의 실제 예측 비교.',
+        alt: '한글 손글씨 네 건에 대한 기존 TrOCR와 CustomTokenizer 모델의 예측 결과 비교',
+        width: 850,
+        height: 650,
+        featured: true
+      },
+      {
+        src: '/images/projects/ocr/augmentation-samples.png',
+        title: '손글씨 증강 결과',
+        caption: '필압·회전·지움·밝기·대비·노이즈 변형을 적용한 학습 이미지.',
+        alt: '같은 한글 손글씨에 일곱 가지 증강 방법을 적용한 결과',
+        width: 1132,
+        height: 737
+      },
+      {
+        src: '/images/projects/ocr/model-results.png',
+        title: '모델별 Accuracy·CER 비교',
+        caption: '기존 TrOCR, CustomTokenizer, beam search 적용 모델을 비교한 결과표.',
+        alt: 'TrOCR 모델 구성별 CER Accuracy 카테고리 정확도 추론 속도를 비교한 표',
+        width: 860,
+        height: 670
+      },
+      {
+        src: '/images/projects/ocr/failure-cases.png',
+        title: '판단이 어려운 실패 사례',
+        caption: '사람에게도 모호한 필기와 잘못된 고신뢰 예측. Reject 정책이 필요한 구간.',
+        alt: '인식하기 어려운 손글씨와 OCR 오예측 사례',
+        width: 810,
+        height: 500
+      }
     ],
     context: [
       '태블릿에 작성되는 규정 문구·이름·금액을 실시간으로 점검해야 했습니다.',

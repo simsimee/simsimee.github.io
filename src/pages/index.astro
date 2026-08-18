@@ -4,17 +4,13 @@ import DataPipeline from '@/components/DataPipeline.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import ProjectVisual from '@/components/ProjectVisual.astro';
 import { projects } from '@/data/projects';
-import { siteProfile, workingPrinciples } from '@/data/site';
-import { compactCopy } from '@/utils/copy';
+import { siteProfile } from '@/data/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const href = (path: string) => `${base}${path}`;
-const careerMoments = [
-  { year: '2022', title: 'Data Selection', detail: 'ODD · Active Learning · Dataset Optimization' },
-  { year: '2024', title: 'Synthetic Data', detail: '한글 손글씨 생성 · OCR 학습·평가' },
-  { year: '2025', title: 'Distribution Modeling', detail: 'Document Layout Prior · Synthetic Augmentation' },
-  { year: '2026', title: 'Production Pipeline', detail: 'Image-to-3D · Quality Gate · Batch Automation' }
-];
+const assetHref = (path: string) => `${base}${path}`;
+const featuredProjects = projects.slice(0, 3);
+const otherProjects = projects.slice(3);
 ---
 
 <BaseLayout>
@@ -28,8 +24,8 @@ const careerMoments = [
     </div>
     <div class="hero__statement">
       <p>
-        Data Selection · Synthetic Data · Quality Control.<br />
-        모델 성능과 데이터 생산 비용을 함께 개선한 프로젝트 중심 포트폴리오.
+        AI/ML 실무 4년+.<br />
+        Data Selection·Synthetic Data·Quality Control을 통한 성능과 생산 효율 개선.
       </p>
       <div class="hero__actions">
         <a class="text-link" href="#projects">프로젝트 살펴보기 <span aria-hidden="true">↘</span></a>
@@ -55,101 +51,109 @@ const careerMoments = [
     </dl>
   </section>
 
-  <section id="projects" class="page-section page-shell projects-section">
+  <section id="perspective" class="page-section page-shell perspective-section perspective-section--compact">
     <SectionHeading
       index="01"
+      label="Data-Centric Workflow"
+      title="데이터 문제를 다루는 네 단계"
+      description="단계 선택 시 관련 프로젝트와 담당 범위 표시."
+    />
+    <DataPipeline />
+  </section>
+
+  <section id="projects" class="page-section page-shell projects-section">
+    <SectionHeading
+      index="02"
       label="Selected Projects"
-      title="성과로 먼저 보는 프로젝트"
-      description="Impact를 먼저 확인하고 Problem · Approach · Implementation · Evidence 순서로 상세 내용 확인."
+      title="대표 프로젝트 세 가지"
+      description="핵심 결과, 실제 산출물, 담당 범위 중심의 요약."
     />
 
     <div class="project-ledger">
-      {projects.map((project) => (
-        <article class:list={['project-entry', `project-entry--${project.slug}`]}>
-          <div class="project-entry__meta">
+      {featuredProjects.map((project) => {
+        const featuredArtifact = project.artifacts?.find((artifact) => artifact.featured);
+        const selectedApproach = project.alternatives.find((alternative) => alternative.selected)?.name;
+        return (
+          <article class:list={['project-entry', `project-entry--${project.slug}`]}>
+            <div class="project-entry__meta">
+              <span>{String(project.order).padStart(2, '0')}</span>
+              <p>{project.category}</p>
+              <small>{project.period}</small>
+            </div>
+            <div class="project-entry__body">
+              <p class="project-entry__impact">{project.resultLine}</p>
+              <h3>{project.title}</h3>
+              <dl class="project-entry__snapshot project-entry__snapshot--compact">
+                <div><dt>문제</dt><dd>{project.dataProblem.title}</dd></div>
+                <div><dt>핵심 결정</dt><dd>{selectedApproach}</dd></div>
+                <div><dt>담당 범위</dt><dd>{project.role}</dd></div>
+              </dl>
+              <div class="project-entry__metrics">
+                {project.metrics.slice(0, 2).map((metric) => (
+                  <div><strong>{metric.value}</strong><span>{metric.label}</span></div>
+                ))}
+              </div>
+              <div class="project-entry__footer">
+                <p><span>주요 기술</span>{project.stacks.slice(0, 4).join(' · ')}</p>
+                <a
+                  class="project-link"
+                  href={href(`/projects/${project.slug}/`)}
+                  aria-label={`${project.shortTitle} 프로젝트 상세 보기`}
+                >
+                  프로젝트 상세 보기 <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+            {featuredArtifact ? (
+              <figure class="project-evidence-preview">
+                <img
+                  src={assetHref(featuredArtifact.src)}
+                  alt={featuredArtifact.alt}
+                  width={featuredArtifact.width}
+                  height={featuredArtifact.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>
+                  <strong>실제 산출물</strong>
+                  <span>{featuredArtifact.title}</span>
+                </figcaption>
+              </figure>
+            ) : <ProjectVisual project={project} />}
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="page-section page-shell other-projects-section">
+    <SectionHeading
+      index="03"
+      label="Other Work"
+      title="생성 파이프라인과 품질 자동화"
+      description="상세 구현과 한계는 각 프로젝트 페이지에서 확인."
+    />
+    <div class="other-projects">
+      {otherProjects.map((project) => (
+        <article>
+          <div>
             <span>{String(project.order).padStart(2, '0')}</span>
             <p>{project.category}</p>
-            <small>{project.period}</small>
           </div>
-          <div class="project-entry__body">
-            <p class="project-entry__impact">{project.resultLine}</p>
-            <h3>{project.title}</h3>
-            <p class="project-entry__intro">{compactCopy(project.intro)}</p>
-            <dl class="project-entry__snapshot">
-              <div><dt>Problem</dt><dd>{compactCopy(project.dataProblem.title)}</dd></div>
-              <div><dt>My Work</dt><dd>{project.role}</dd></div>
-            </dl>
-            <div class="project-entry__metrics">
-              {project.metrics.slice(0, 2).map((metric) => (
-                <div><strong>{metric.value}</strong><span>{metric.label}</span></div>
-              ))}
-            </div>
-            <div class="project-entry__footer">
-              <p><span>Stack</span>{project.stacks.slice(0, 4).join(' · ')}</p>
-              <a
-                class="project-link"
-                href={href(`/projects/${project.slug}/`)}
-                aria-label={`${project.shortTitle} 프로젝트 상세 보기`}
-              >
-                프로젝트 상세 보기 <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-          <ProjectVisual project={project} />
+          <h3>{project.title}</h3>
+          <p>{project.resultLine}</p>
+          <a href={href(`/projects/${project.slug}/`)} aria-label={`${project.shortTitle} 프로젝트 상세 보기`}>
+            상세 보기 <span aria-hidden="true">→</span>
+          </a>
         </article>
       ))}
     </div>
   </section>
 
-  <section id="perspective" class="page-section page-shell perspective-section">
-    <SectionHeading
-      index="02"
-      label="Data-Centric Workflow"
-      title="프로젝트를 연결하는 문제 해결 구조"
-      description="전체 pipeline은 탐색 지도. 각 단계에서 관련 프로젝트와 담당 범위를 바로 확인."
-    />
-    <DataPipeline />
-  </section>
-
-  <section class="page-section career-flow">
+  <section class="page-section home-experience">
     <div class="page-shell">
-      <SectionHeading
-        index="03"
-        label="Career Progression"
-        title="Data Selection에서 Production Pipeline으로"
-        description="도메인보다 문제 해결 범위의 확장에 초점을 둔 경력 요약."
-      />
-      <ol class="career-flow__list">
-        {careerMoments.map((moment) => (
-          <li>
-            <span>{moment.year}</span>
-            <div>
-              <strong>{moment.title}</strong>
-              <p>{moment.detail}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <a class="text-link career-flow__link" href={href('/experience/')}>
-        전체 경력과 활동 보기 <span aria-hidden="true">→</span>
-      </a>
+      <p>AI/ML 실무 4년+ · Data Selection · Document AI · Synthetic Data · Generative CV</p>
+      <a class="text-link" href={href('/experience/')}>전체 경력 보기 <span aria-hidden="true">→</span></a>
     </div>
-  </section>
-
-  <section class="page-section page-shell principles-section">
-    <SectionHeading
-      index="04"
-      label="Working Principles"
-      title="결과보다 먼저 확인하는 판단 기준"
-      description="프로젝트 전반에 반복 적용한 설계·검증 원칙."
-    />
-    <ol class="principle-list">
-      {workingPrinciples.map((principle, index) => (
-        <li>
-          <span>{String(index + 1).padStart(2, '0')}</span>
-          <p>{principle}</p>
-        </li>
-      ))}
-    </ol>
   </section>
 </BaseLayout>

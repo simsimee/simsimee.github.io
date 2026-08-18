@@ -49,17 +49,33 @@ const navItems = [
   const navigation = document.querySelector('[data-navigation]');
 
   if (header && toggle && navigation) {
+    const closeMenu = (returnFocus = false) => {
+      toggle.setAttribute('aria-expanded', 'false');
+      header.removeAttribute('data-menu-open');
+      if (returnFocus) (toggle as HTMLElement).focus();
+    };
+
     toggle.addEventListener('click', () => {
       const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!isOpen));
-      header.toggleAttribute('data-menu-open', !isOpen);
+      if (isOpen) {
+        closeMenu();
+        return;
+      }
+      toggle.setAttribute('aria-expanded', 'true');
+      header.setAttribute('data-menu-open', '');
+      navigation.querySelector<HTMLElement>('a')?.focus();
     });
 
     navigation.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        toggle.setAttribute('aria-expanded', 'false');
-        header.removeAttribute('data-menu-open');
-      });
+      link.addEventListener('click', () => closeMenu());
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') closeMenu(true);
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 720) closeMenu();
     });
   }
 </script>

@@ -1,0 +1,33 @@
+---
+import type { ProjectArtifact } from '@/data/projects';
+
+type Props = {
+  artifacts: ProjectArtifact[];
+};
+
+const { artifacts } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const assetHref = (path: string) => `${base}${path}`;
+---
+
+<div class="evidence-gallery">
+  {artifacts.map((artifact, index) => (
+    <figure class:list={['evidence-figure', { 'evidence-figure--wide': index === 0 }]}>
+      <a href={assetHref(artifact.src)} target="_blank" rel="noreferrer" aria-label={`${artifact.title} 원본 이미지 열기`}>
+        <img
+          src={assetHref(artifact.src)}
+          alt={artifact.alt}
+          width={artifact.width}
+          height={artifact.height}
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+      <figcaption>
+        <strong>{artifact.title}</strong>
+        <p>{artifact.caption}</p>
+        <span>원본 이미지 보기 ↗</span>
+      </figcaption>
+    </figure>
+  ))}
+</div>
