@@ -516,6 +516,16 @@ h1, h2, h3, p, dl, dd, figure { margin-top: 0; }
 .subpage-hero__eyebrow { color: var(--moss); font-size: 11px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
 .subpage-hero h1 { max-width: 980px; margin: 35px 0; font-size: clamp(45px, 7vw, 82px); line-height: 1.1; letter-spacing: -.06em; }
 .subpage-hero > p:last-child { max-width: 650px; margin-left: auto; color: var(--ink-soft); font-size: 18px; }
+.about-hero { display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 48px; align-items: end; }
+.about-hero__copy { min-width: 0; }
+.about-hero__copy h1 { margin-bottom: 30px; font-size: clamp(43px, 5.8vw, 76px); }
+.about-hero__summary { max-width: 650px; margin: 0; color: var(--ink-soft); font-size: 17px; line-height: 1.6; }
+.about-hero__portrait { width: 140px; margin: 0; justify-self: end; }
+.about-hero__portrait img { display: block; width: 100%; height: auto; background: var(--paper-light); border: 1px solid var(--line-dark); }
+.about-hero__portrait figcaption { display: grid; gap: 2px; padding-top: 10px; border-top: 1px solid var(--ink); }
+.about-hero__portrait figcaption strong { font-size: 13px; line-height: 1.4; }
+.about-hero__portrait figcaption span { color: var(--ink-soft); font-size: 10px; line-height: 1.45; }
+.about-hero__portrait figcaption small { color: var(--moss); font-size: 9px; line-height: 1.45; letter-spacing: .03em; }
 .experience-list { margin-left: 90px; }
 .experience-item { padding: 52px 0; border-top: 1px solid var(--ink); }
 .experience-item > header { display: flex; justify-content: space-between; gap: 30px; }
@@ -578,6 +588,8 @@ h1, h2, h3, p, dl, dd, figure { margin-top: 0; }
   .project-pipeline li:nth-child(3) { border-right: 0; }
   .experience-work { grid-template-columns: 1fr 1fr; }
   .credential-grid { grid-template-columns: 1fr 1fr; }
+  .about-hero { grid-template-columns: minmax(0, 1fr) 126px; gap: 36px; }
+  .about-hero__portrait { width: 126px; }
 }
 
 @media (max-width: 720px) {
@@ -662,6 +674,9 @@ h1, h2, h3, p, dl, dd, figure { margin-top: 0; }
   .experience-work, .credential-grid, .education-entry, .contact-layout { grid-template-columns: 1fr; }
   .experience-work > div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
   .skill-group { grid-template-columns: 1fr; gap: 12px; }
+  .about-hero { grid-template-columns: 1fr; gap: 44px; align-items: start; }
+  .about-hero__copy h1 { font-size: clamp(41px, 12vw, 62px); }
+  .about-hero__portrait { width: 120px; justify-self: start; }
 }
 
 @media (max-width: 430px) {

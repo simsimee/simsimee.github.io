@@ -4,6 +4,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import { siteProfile } from '@/data/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const profileImage = `${base}/images/profile.webp`;
 const skillGroups = [
   ['데이터 진단·선별', ['Active Learning', 'Uncertainty Sampling', 'ODD', 'FP/FN Analysis', 'FAISS', 'FiftyOne']],
   ['합성·증강', ['Synthetic Data', 'KDE Layout Modeling', 'TrOCR', 'TRELLIS', 'Diffusion', 'Augraphy']],
@@ -14,9 +15,26 @@ const skillGroups = [
 
 <BaseLayout title="소개 · 심민우 포트폴리오" description={siteProfile.description}>
   <header class="subpage-hero page-shell about-hero">
-    <p class="subpage-hero__eyebrow">Profile</p>
-    <h1>Data-Centric 관점으로<br />모델 성능과 생산성을 개선</h1>
-    <p>Data Selection · Synthetic Data · Evaluation · Production Pipeline</p>
+    <div class="about-hero__copy">
+      <p class="subpage-hero__eyebrow">Profile</p>
+      <h1>Data-Centric 관점으로<br />모델 성능과 생산성을 개선</h1>
+      <p class="about-hero__summary">Data Selection · Synthetic Data · Evaluation · Production Pipeline</p>
+    </div>
+    <figure class="about-hero__portrait">
+      <img
+        src={profileImage}
+        alt="AI/ML 엔지니어 심민우 프로필 사진"
+        width="1122"
+        height="1402"
+        decoding="async"
+        fetchpriority="high"
+      />
+      <figcaption>
+        <strong>심민우</strong>
+        <span>AI / ML Engineer</span>
+        <small>Data-Centric AI</small>
+      </figcaption>
+    </figure>
   </header>
 
   <section class="page-section page-shell about-statement">
