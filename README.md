@@ -1,6 +1,6 @@
 # 심민우 · Computer Vision Engineer 포트폴리오
 
-Object Detection·OCR·Generative Vision·Multimodal AI 프로젝트를 정리한 GitHub Pages용 Astro 정적 포트폴리오입니다.
+Computer Vision을 중심으로 Data-Centric AI·Object Detection·OCR·Generative Vision·Multimodal AI 프로젝트를 정리한 GitHub Pages용 Astro 정적 포트폴리오입니다.
 
 ## 콘텐츠 수정
 

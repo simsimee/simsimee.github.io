@@ -1,12 +1,12 @@
 export const siteProfile = {
   name: '심민우',
   role: 'Computer Vision Engineer',
-  positioning: 'Computer Vision · Object Detection · Generative Vision · Multimodal AI',
+  positioning: 'Computer Vision · Data-Centric AI · Generative Vision · Multimodal AI',
   email: 'smw5626@gmail.com',
   github: 'https://github.com/simsimee',
   resumePath: 'resume.pdf',
   description:
-    'Object Detection·OCR·Generative Vision·Multimodal AI 모델을 학습하고 평가한 Computer Vision 엔지니어 심민우의 포트폴리오.'
+    'Computer Vision 모델과 데이터를 함께 개선해 온 Data-Centric AI 엔지니어 심민우의 Object Detection·OCR·Generative Vision·Multimodal AI 포트폴리오.'
 };
 
 export const pipelineStages = [
@@ -15,7 +15,7 @@ export const pipelineStages = [
     number: '01',
     title: 'Task',
     question: 'CV Task·Metric 정의',
-    description: '입력·출력·성공 지표 정의. Failure Case 분석을 통한 성능 병목 구체화.'
+    description: '입력·출력·성공 지표 정의. Failure Case 기반 모델·데이터 병목 구체화.'
   },
   {
     key: 'select',
@@ -36,7 +36,7 @@ export const pipelineStages = [
     number: '04',
     title: 'Evaluate',
     question: 'Performance·Quality',
-    description: 'mAP·Accuracy·CER·품질 기준으로 모델 성능 비교. 오류 분석을 다음 실험으로 환류.'
+    description: 'mAP·Accuracy·CER·품질 기준으로 성능 비교. 오류 분석을 모델·데이터 개선으로 환류.'
   }
 ] as const;
 
