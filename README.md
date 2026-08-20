@@ -1,6 +1,6 @@
-# 심민우 · 데이터 중심 AI 포트폴리오
+# 심민우 · Computer Vision Engineer 포트폴리오
 
-GitHub Pages에서 배포할 수 있는 Astro 기반 정적 포트폴리오입니다.
+Object Detection·OCR·Generative Vision·Multimodal AI 프로젝트를 정리한 GitHub Pages용 Astro 정적 포트폴리오입니다.
 
 ## 콘텐츠 수정
 
@@ -10,7 +10,7 @@ GitHub Pages에서 배포할 수 있는 Astro 기반 정적 포트폴리오입�
 - 소개: `src/pages/about.astro`
 - 전체 디자인: `src/styles/global.css`
 
-`src/data/site.ts`의 `github` 값은 실제 GitHub 주소가 확정되면 입력합니다. 빈 값일 때는 GitHub 링크가 화면에 나타나지 않습니다.
+`src/data/site.ts`의 `github`와 `email`은 공개 전 실제 연락처와 일치하는지 확인합니다.
 
 ## 로컬 확인
 

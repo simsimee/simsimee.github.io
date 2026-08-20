@@ -19,6 +19,7 @@ export type ProjectArtifact = {
 export type Project = {
   slug: string;
   order: number;
+  organization: string;
   title: string;
   shortTitle: string;
   period: string;
@@ -29,6 +30,7 @@ export type Project = {
   stacks: string[];
   stages: PipelineStage[];
   metrics: ProjectMetric[];
+  evidenceSummary: string;
   artifacts?: ProjectArtifact[];
   context: string[];
   dataProblem: {
@@ -66,22 +68,24 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: 'dla',
-    order: 1,
-    title: '저자원 Document AI를 위한 Layout-aware Synthetic Augmentation',
+    order: 4,
+    organization: '셀렉트스타',
+    title: 'Layout Detection을 위한 Layout-aware Synthetic Augmentation',
     shortTitle: 'Layout-aware Augmentation',
     period: '2025.06 — 2025.09',
-    category: 'Document AI · Synthetic Data',
+    category: 'Computer Vision · Object Detection',
     intro:
       '도메인별 500장만 확보할 수 있는 문서 레이아웃 검출 문제에서, 실제 레이아웃 분포를 학습해 페이지와 라벨을 함께 생성하는 증강 기법을 설계했습니다.',
     resultLine: 'DocLayNet 3개 도메인에서 YOLOv13·RF-DETR 모두 비교 증강 중 Top-1',
     role: '기법 제안 · 실험 설계 · 전 구간 구현 및 평가',
-    stacks: ['Python', 'PyTorch', 'YOLOv13', 'RF-DETR', 'DocLayNet', 'KDE', 'Augraphy'],
-    stages: ['diagnose', 'generate', 'validate'],
+    stacks: ['YOLOv13', 'RF-DETR', 'PyTorch', 'DocLayNet', 'KDE', 'Augraphy', 'Python'],
+    stages: ['diagnose', 'select', 'generate', 'validate'],
     metrics: [
       { value: '+8.81', label: '최대 mAP points', context: 'YOLOv13 · Financial Reports · baseline 대비' },
       { value: '2 × 3', label: '모델 × 공개 도메인', context: '두 아키텍처, 세 도메인에서 비교 방법 중 Top-1' },
       { value: '400 → 2,400', label: '도메인별 학습 샘플', context: '원본 400장과 합성 2,000장' }
     ],
+    evidenceSummary: '기술평가 문서에서 공개 가능한 결과표·파이프라인·증강 예시를 원본 해상도로 수록.',
     artifacts: [
       {
         src: '/images/projects/dla/doclaynet-results.png',
@@ -177,22 +181,24 @@ export const projects: Project[] = [
   },
   {
     slug: 'data-centric-detection',
-    order: 2,
-    title: 'Data-Centric Object Detection: Dataset Optimization',
+    order: 1,
+    organization: '에이모 (AIMMO)',
+    title: 'Object Detection Dataset Optimization',
     shortTitle: 'Dataset Optimization',
     period: '2022.02 — 2023.05',
-    category: 'Data Curation · Active Learning',
+    category: 'Computer Vision · Object Detection',
     intro:
       '무작위로 더 많이 모으는 대신 모델이 어려워하는 조건과 중복되지 않는 샘플을 우선 확보해, 더 적은 데이터로 더 높은 탐지 성능을 만들었습니다.',
-    resultLine: '데이터 약 40% 절감, mAP 0.64 → 0.85',
+    resultLine: 'mAP 0.64 → 0.85, 학습 데이터 약 40% 절감',
     role: '데이터 조건 정의 · 실험 · 추출 시스템 · 큐레이션 프로토타입',
-    stacks: ['Python', 'PyTorch', 'YOLOv5', 'CLIP', 'ResNet', 'FAISS', 'FiftyOne', 'ISO 34503'],
+    stacks: ['YOLOv5', 'CLIP', 'ResNet', 'PyTorch', 'FAISS', 'FiftyOne', 'Python', 'ISO 34503'],
     stages: ['diagnose', 'select', 'validate'],
     metrics: [
-      { value: '−40%', label: '학습 데이터 수량', context: '무작위 13만 장 대비 최적화 8만 장' },
       { value: '0.64 → 0.85', label: 'mAP', context: '동일 탐지 과제에서 데이터 구성 개선 후' },
+      { value: '−40%', label: '학습 데이터 수량', context: '무작위 13만 장 대비 최적화 8만 장' },
       { value: '5일 → 2일', label: '데이터 수집 기간', context: '조건별 추출 시스템 적용' }
     ],
+    evidenceSummary: '고객 데이터는 비공개. 동일 과제의 실험 수치와 직접 구현한 추출·큐레이션 구조만 공개.',
     context: [
       '자율주행 데이터는 양이 많아도 유사한 주행 장면이 반복되면 모델에 새로운 정보를 주지 못합니다.',
       '수집 이후 사람이 대량 데이터를 정제하는 방식은 저장·레이블링·검수 비용을 함께 증가시켰습니다.',
@@ -252,22 +258,24 @@ export const projects: Project[] = [
   },
   {
     slug: 'ocr',
-    order: 3,
+    order: 5,
+    organization: '셀렉트스타',
     title: '한글 Handwriting OCR 학습·평가 시스템',
     shortTitle: 'Handwriting OCR',
     period: '2024.05 — 2024.12',
-    category: 'OCR · Synthetic Data',
+    category: 'Computer Vision · Vision-Language',
     intro:
       '실사용 데이터가 매우 적고 모든 손글씨가 멀티라인이 될 수 있는 조건에서, 합성 손글씨 생성기와 character-level 토크나이저를 결합한 1-stage OCR 시스템을 개발했습니다.',
-    resultLine: 'Accuracy 목표 0.8 달성, 평균 추론 0.07초',
+    resultLine: 'Text Recognition Accuracy 83%, 평균 추론 0.07초',
     role: '데이터 생성·증강 · 모델 학습·평가 · 토크나이저 개조',
-    stacks: ['Python', 'PyTorch', 'Hugging Face', 'TrOCR', 'OpenCV', 'Pillow', 'TensorBoard'],
-    stages: ['diagnose', 'generate', 'validate'],
+    stacks: ['TrOCR', 'Hugging Face', 'PyTorch', 'OpenCV', 'TensorBoard', 'Pillow', 'Python'],
+    stages: ['diagnose', 'select', 'generate', 'validate'],
     metrics: [
-      { value: '116 → 2,498', label: '실사용 이미지', context: '초기 보유 수량에서 프로젝트 기간 중 확대' },
+      { value: '83%', label: 'Text Recognition Accuracy', context: '실사용 평가 기준' },
       { value: '31,900', label: '합성 손글씨 이미지', context: '폰트 기반 생성 데이터셋' },
       { value: '0.07초', label: '평균 추론 시간', context: '최소 0.04초 · 최대 0.1초' }
     ],
+    evidenceSummary: '고객사명과 사내 데이터 세부 구성은 비공개. 공개 가능한 예측·증강·평가 화면을 원본 해상도로 수록.',
     artifacts: [
       {
         src: '/images/projects/ocr/prediction-cases.png',
@@ -288,8 +296,8 @@ export const projects: Project[] = [
       },
       {
         src: '/images/projects/ocr/model-results.png',
-        title: '모델별 Accuracy·CER 비교',
-        caption: '기존 TrOCR, CustomTokenizer, beam search 적용 모델을 비교한 결과표.',
+        title: '개발 과정의 Accuracy·CER 비교',
+        caption: 'TrOCR, CustomTokenizer, beam search 구성별 내부 비교표. 최종 실사용 평가 Accuracy 83%와는 평가 구성이 다릅니다.',
         alt: 'TrOCR 모델 구성별 CER Accuracy 카테고리 정확도 추론 속도를 비교한 표',
         width: 860,
         height: 670
@@ -356,28 +364,30 @@ export const projects: Project[] = [
       collaboration: ['고객 요구사항과 평가 기준 조율', '실사용 데이터 수집·레이블링', '추론 코드와 소스코드 전달']
     },
     experiment: ['AI Hub 519,550장, 사내 수집·레이블링 63,000장, 합성 31,900장을 단계적으로 활용했습니다.', '실사용 데이터는 초기 116장에서 2,498장으로 확대했습니다.', 'Accuracy 0.8 이상과 평균 추론 0.07초 이내를 제품 목표로 두었습니다.'],
-    findings: ['초기 Accuracy 목표 0.8을 달성하고 평균 0.07초의 추론 시간으로 요구 조건을 충족했습니다.', 'CustomTokenizer 적용 모델에서 기존 파인튜닝 대비 Accuracy·CER 개선과 오인식 감소를 확인했습니다.', '데이터 구성 완료 시점이 늦어 실험 설계 이전에 데이터 확보 일정을 고정해야 한다는 교훈을 얻었습니다.'],
+    findings: ['Text Recognition Accuracy 83%와 평균 추론 0.07초로 요구 조건을 충족했습니다.', 'CustomTokenizer 적용 모델에서 기존 파인튜닝 대비 Accuracy·CER 개선과 오인식 감소를 확인했습니다.', '데이터 구성 완료 시점이 늦어 실험 설계 이전에 데이터 확보 일정을 고정해야 한다는 교훈을 얻었습니다.'],
     limitations: ['폰트 합성으로 도메인 격차를 줄였지만 개인별 연결 필기 습관까지 재현하지는 못했습니다.', '문자 단위 토큰화로 디코딩 시퀀스가 길어지는 비용이 있습니다.', '사람도 판단하기 어려운 필기에 대한 reject 정책을 완성하지 못했습니다.'],
     nextSteps: ['합성-실제 혼합 비율에 따른 실제 test CER 비교', '저신뢰·고신뢰 오답 기반 Active Learning', '숫자·날짜 등 필드 타입별 제약 디코딩과 reject 구간 설계']
   },
   {
     slug: '3d-marine',
-    order: 4,
+    order: 2,
+    organization: '셀렉트스타',
     title: 'Single Image 기반 3D 해양 객체 Synthetic Data Pipeline',
     shortTitle: '3D Synthetic Data',
     period: '2025.09 — 2026.07',
-    category: 'Generative CV · Data Pipeline',
+    category: 'Generative Vision · Image-to-3D',
     intro:
       '수집이 제한된 해양 객체 이미지 한 장에서 3D 표현과 여러 시점의 전경을 생성하고, 고해상도 배경의 지정 위치에 합성하는 데이터 생산 시스템을 구축했습니다.',
     resultLine: '내부 활용 합성 데이터 10,000건, 공개 검증 산출물 150 scene',
     role: '파이프라인 설계 · 추론 로직 재구현 · 실행 인프라',
-    stacks: ['PyTorch', 'Diffusers', 'TRELLIS', 'CLIP', 'OpenCV', 'Docker', 'CUDA'],
-    stages: ['generate', 'validate'],
+    stacks: ['TRELLIS', 'Diffusers', 'CLIP', 'PyTorch', 'OpenCV', 'CUDA', 'Docker'],
+    stages: ['select', 'generate', 'validate'],
     metrics: [
       { value: '10,000', label: '내부 활용 합성 데이터', context: '다양한 배경·위치·스케일·조도 조건' },
       { value: '150', label: '공개 검증 scene', context: '1080p 87개 · 4K 63개' },
       { value: 'O×B → O', label: '3D 생성 호출', context: '객체 단위 결과 캐시 후 배경 조합에서 재사용' }
     ],
+    evidenceSummary: '보안·컴플라이언스 대상 원본과 합성 이미지는 비공개. 공개 가능한 산출물 집계와 구현 구조만 수록.',
     context: [
       '군함·특수 선박처럼 현실적으로 수집이 제한된 객체는 시점과 배경 조건을 충분히 확보하기 어렵습니다.',
       '2D copy-paste는 수량을 늘려도 보이지 않는 면이나 새로운 관측 시점을 만들지 못합니다.',
@@ -437,22 +447,24 @@ export const projects: Project[] = [
   },
   {
     slug: 'character-pipeline',
-    order: 5,
+    order: 3,
+    organization: '셀렉트스타',
     title: 'Personalized Character Generation & Quality Automation',
     shortTitle: 'Character Generation',
     period: '2025.03 — 2025.06',
-    category: 'VLM · Quality Automation',
+    category: 'Multimodal Vision · Generation',
     intro:
       '생성 모델의 역할을 Style Extraction·Image Generation·Quality Review로 분리하고, Rule Check와 AI Review를 연결해 실패 결과를 자동 차단했습니다.',
     resultLine: '검수 통과율 35% → 85%, 이미지 변환 성공률 98%',
     role: '5단계 End-to-End 파이프라인 단독 설계 및 구현',
-    stacks: ['Python', 'Gemini', 'Pydantic', 'OpenCV', 'NumPy', 'Pillow'],
-    stages: ['generate', 'validate'],
+    stacks: ['Gemini', 'OpenCV', 'Pydantic', 'Python', 'NumPy', 'Pillow'],
+    stages: ['select', 'generate', 'validate'],
     metrics: [
       { value: '35% → 85%', label: '검수 통과율', context: '내부 PoC 품질 게이트 개선' },
       { value: '98%', label: '이미지 변환 성공률', context: '5단계 파이프라인 결과' },
       { value: '2단계', label: '자동 품질 게이트', context: '로컬 알파 검사 → AI 7개 기준 검수' }
     ],
+    evidenceSummary: '내부 PoC 이미지 대신 공개 가능한 파이프라인 구조·품질 기준·집계 결과만 수록.',
     context: [
       '인물 사진을 캐릭터로 직접 변환하면 원본 캐릭터의 아이덴티티와 스타일이 무너지는 문제가 있었습니다.',
       '생성 모델의 확률적 실패와 배경 제거 실패를 사람이 매번 검수할 수 없었습니다.',

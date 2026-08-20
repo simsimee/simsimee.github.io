@@ -4,9 +4,10 @@ import { projects } from '@/data/projects';
 type Props = { currentSlug: string };
 const { currentSlug } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const index = projects.findIndex((project) => project.slug === currentSlug);
-const previous = projects[(index - 1 + projects.length) % projects.length];
-const next = projects[(index + 1) % projects.length];
+const orderedProjects = [...projects].sort((a, b) => a.order - b.order);
+const index = orderedProjects.findIndex((project) => project.slug === currentSlug);
+const previous = orderedProjects[(index - 1 + orderedProjects.length) % orderedProjects.length];
+const next = orderedProjects[(index + 1) % orderedProjects.length];
 ---
 
 <nav class="project-navigation" aria-label="다른 프로젝트 보기">

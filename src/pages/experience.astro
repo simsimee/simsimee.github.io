@@ -4,12 +4,13 @@ import SectionHeading from '@/components/SectionHeading.astro';
 
 const experiences = [
   {
+    id: 'selectstar',
     company: '셀렉트스타',
     role: 'AI 1팀 · AI Research Engineer',
     period: '2024.05 — 현재',
-    description: '저자원 데이터 문제 해결. Synthetic Data·Generation·Evaluation Pipeline 및 멀티모달 학습 데이터 개발.',
+    description: 'OCR·Object Detection·Generative Vision·Multimodal 태스크의 모델 학습·평가와 Synthetic Data Pipeline 개발.',
     work: [
-      ['한글 손글씨 OCR', '합성 데이터 생성기, TrOCR 학습·평가, character-level 토크나이저'],
+      ['한글 손글씨 OCR', 'Text Recognition Accuracy 83%, 평균 추론 0.07초, 등록 특허 1건'],
       ['문서 레이아웃 합성 증강', 'KDE 기반 분포 모델링, 자동 라벨 생성, YOLOv13·RF-DETR 비교 평가'],
       ['개인화 캐릭터 생성 PoC', '구조화 스타일 추출, 이미지 생성, 로컬·AI 품질 게이트'],
       ['멀티모달 학습 데이터셋', 'Reasoning·QA 생성 파이프라인, 검수 통과율 58% → 86%'],
@@ -17,10 +18,11 @@ const experiences = [
     ]
   },
   {
+    id: 'aimmo',
     company: '에이모 (AIMMO)',
     role: '자율주행팀 · 연구원',
     period: '2021.12 — 2023.10',
-    description: '자율주행 Object Detection을 위한 데이터 조건 정의. Active Collection·Dataset Optimization·Curation Tool 개발.',
+    description: '자율주행 Object Detection 모델 학습·평가. Active Learning·Embedding Curation을 적용한 Dataset Optimization.',
     work: [
       ['객체 탐지 데이터 최적화', '데이터 40% 절감, mAP 0.64 → 0.85, 총 26만 장 데이터셋 구축 기여'],
       ['능동 학습 수집 시스템', '수집 기간 5일 → 2일, 정제 비용 약 50% 절감'],
@@ -39,15 +41,15 @@ const patents = [
 <BaseLayout title="경력 · 심민우 포트폴리오" description="AI 엔지니어 심민우의 경력, 특허, 강의와 교육 경험입니다.">
   <header class="subpage-hero page-shell">
     <p class="subpage-hero__eyebrow">Experience</p>
-    <h1>Data Selection에서<br />Production Pipeline으로</h1>
-    <p>도메인보다 데이터 문제의 정의·검증·운영 범위 확장에 초점을 둔 경력.</p>
+    <h1>Object Detection에서<br />Generative·Multimodal Vision으로</h1>
+    <p>Computer Vision 모델의 태스크 정의, 학습, 평가, 실행 파이프라인 구현 경력.</p>
   </header>
 
   <section class="page-section page-shell experience-section">
     <SectionHeading index="01" label="Experience" title="업무 경험" />
     <div class="experience-list">
       {experiences.map((experience) => (
-        <article class="experience-item">
+        <article id={experience.id} class="experience-item">
           <header>
             <div><h2>{experience.company}</h2><p>{experience.role}</p></div>
             <div><span>{experience.period}</span>{experience.note && <small>{experience.note}</small>}</div>

@@ -7,7 +7,7 @@ const href = (path: string) => `${base}${path}`;
 ---
 
 <div class="data-pipeline" data-pipeline>
-  <div class="data-pipeline__track" role="tablist" aria-label="Data-Centric 문제 해결 단계">
+  <div class="data-pipeline__track" role="tablist" aria-label="Computer Vision 모델 개발 단계">
     {pipelineStages.map((stage, index) => (
       <button
         class="data-pipeline__stage"
@@ -28,7 +28,10 @@ const href = (path: string) => `${base}${path}`;
 
   <div class="data-pipeline__panels">
     {pipelineStages.map((stage, index) => {
-      const related = projects.filter((project) => project.stages.includes(stage.key));
+      const related = projects
+        .filter((project) => project.stages.includes(stage.key))
+        .sort((a, b) => a.order - b.order)
+        .slice(0, 3);
       return (
         <section
           class="data-pipeline__panel"

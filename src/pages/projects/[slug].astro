@@ -43,9 +43,10 @@ const sectionNumber = (number: number) =>
         ))}
       </div>
       <dl class="case-hero__facts">
+        <div><dt>소속</dt><dd>{project.organization}</dd></div>
         <div><dt>기간</dt><dd>{project.period}</dd></div>
         <div><dt>담당 범위</dt><dd>{project.role}</dd></div>
-        <div><dt>주요 기술</dt><dd>{project.stacks.slice(0, 5).join(' · ')}</dd></div>
+        <div><dt>주요 모델·도구</dt><dd>{project.stacks.slice(0, 5).join(' · ')}</dd></div>
       </dl>
       <ProjectStageMap active={project.stages} />
     </header>
@@ -75,8 +76,11 @@ const sectionNumber = (number: number) =>
       <div class="overview-visual">
         <ProjectVisual project={project} />
       </div>
+      {!hasArtifacts && (
+        <p class="evidence-scope"><span>공개 범위</span>{project.evidenceSummary}</p>
+      )}
       <div class="stack-line">
-        <span>사용 기술</span>
+        <span>모델·도구</span>
         <ul>{project.stacks.map((stack) => <li>{stack}</li>)}</ul>
       </div>
     </section>
@@ -88,7 +92,7 @@ const sectionNumber = (number: number) =>
             <span>02</span>
             <div><p>실제 산출물</p><h2>결과 화면과 작업 근거</h2></div>
           </div>
-          <p class="artifact-intro">프로젝트 문서에서 공개 가능한 결과 화면만 선별. 이미지를 선택하면 원본 크기로 확인 가능.</p>
+          <p class="artifact-intro">{project.evidenceSummary} 이미지를 선택하면 원본 크기로 확인 가능.</p>
           <ProjectEvidence artifacts={project.artifacts!} />
         </div>
       </section>

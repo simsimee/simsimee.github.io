@@ -6,10 +6,10 @@ import { siteProfile } from '@/data/site';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const profileImage = `${base}/images/profile.webp`;
 const skillGroups = [
-  ['데이터 진단·선별', ['Active Learning', 'Uncertainty Sampling', 'ODD', 'FP/FN Analysis', 'FAISS', 'FiftyOne']],
-  ['합성·증강', ['Synthetic Data', 'KDE Layout Modeling', 'TrOCR', 'TRELLIS', 'Diffusion', 'Augraphy']],
-  ['평가·품질', ['mAP@50:95', 'CER', 'Confidence Analysis', 'CLIP Gate', 'LLM-as-a-Judge']],
-  ['엔지니어링', ['Python', 'PyTorch', 'Hugging Face', 'OpenCV', 'Docker', 'CUDA', 'Pydantic']]
+  ['Computer Vision Models', ['YOLOv5', 'YOLOv13', 'RF-DETR', 'TrOCR', 'VisionEncoderDecoder']],
+  ['Generative Vision', ['TRELLIS', 'Diffusers', 'Image-to-3D', 'LDM', 'Synthetic Data']],
+  ['Multimodal & Representation', ['CLIP', 'Gemini', 'ResNet Embedding', 'VLM Quality Review']],
+  ['Training & Evaluation', ['PyTorch', 'Hugging Face', 'OpenCV', 'mAP@50:95', 'Accuracy', 'CER', 'CUDA', 'Docker']]
 ];
 ---
 
@@ -17,8 +17,8 @@ const skillGroups = [
   <header class="subpage-hero page-shell about-hero">
     <div class="about-hero__copy">
       <p class="subpage-hero__eyebrow">Profile</p>
-      <h1>Data-Centric 관점으로<br />모델 성능과 생산성을 개선</h1>
-      <p class="about-hero__summary">Data Selection · Synthetic Data · Evaluation · Production Pipeline</p>
+      <h1>Computer Vision 모델을<br />데이터·평가와 연결</h1>
+      <p class="about-hero__summary">Object Detection · OCR · Generative Vision · Multimodal AI</p>
     </div>
     <figure class="about-hero__portrait">
       <img
@@ -31,27 +31,27 @@ const skillGroups = [
       />
       <figcaption>
         <strong>심민우</strong>
-        <span>AI / ML Engineer</span>
-        <small>Data-Centric AI</small>
+        <span>{siteProfile.role}</span>
+        <small>Object Detection · Generative Vision</small>
       </figcaption>
     </figure>
   </header>
 
   <section class="page-section page-shell about-statement">
-    <SectionHeading index="01" label="How I Work" title="데이터 문제를 실행 가능한 설계로 전환" />
+    <SectionHeading index="01" label="How I Work" title="CV 문제를 모델·데이터·평가로 연결" />
     <div class="editorial-columns">
-      <p class="serif-statement">모델 변경 전, Failure Case와 데이터 분포 우선 확인.</p>
+      <p class="serif-statement">Task·Metric 정의 후 Model Architecture와 Failure Case 검토.</p>
       <ul class="context-list">
-        <li>자율주행: ODD와 Active Learning 기반 학습 샘플 선별</li>
-        <li>OCR: 부족한 실사용 데이터를 Synthetic Data로 보완</li>
-        <li>Document AI: 도메인별 Layout Distribution 직접 모델링</li>
-        <li>Generative CV: 수집하기 어려운 시점·장면 생성과 Quality Gate 설계</li>
+        <li>Object Detection: YOLOv5·13·RF-DETR 학습과 Cross-model Evaluation</li>
+        <li>OCR: TrOCR Fine-tuning·Tokenizer 개조·CER 기반 오류 분석</li>
+        <li>Generative Vision: TRELLIS·Diffusion 모델을 연결한 3D 합성 파이프라인</li>
+        <li>Multimodal AI: CLIP·Gemini 기반 품질 평가와 자동 검수</li>
       </ul>
     </div>
   </section>
 
   <section class="page-section page-shell skills-section">
-    <SectionHeading index="02" label="Capabilities" title="문제 해결 단계별 기술" />
+    <SectionHeading index="02" label="Capabilities" title="모델 태스크별 기술" />
     <div class="skill-groups">
       {skillGroups.map(([title, skills]) => (
         <div class="skill-group">
@@ -66,9 +66,9 @@ const skillGroups = [
     <SectionHeading index="03" label="Contact" title="연락처" />
     <div class="contact-layout">
       <ul>
-        <li>저자원 환경의 데이터 전략과 합성 데이터</li>
-        <li>문서 AI·OCR·컴퓨터 비전</li>
-        <li>생성 모델 품질 평가와 자동화 파이프라인</li>
+        <li>Object Detection·Computer Vision 모델 개발</li>
+        <li>Document AI·OCR·Vision-Language 모델 활용</li>
+        <li>Generative Vision·Multimodal 품질 평가</li>
       </ul>
       <div>
         <a href={`mailto:${siteProfile.email}`}>{siteProfile.email}</a>
