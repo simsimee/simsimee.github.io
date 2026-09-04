@@ -6,18 +6,13 @@ const resumeHref = `${base}/${siteProfile.resumePath}`;
 ---
 
 <footer class="site-footer">
-  <div class="page-shell site-footer__grid">
-    <div>
-      <p class="section-index">Contact</p>
-      <a class="site-footer__statement" href={`mailto:${siteProfile.email}`}>{siteProfile.email}</a>
-    </div>
-    <div class="site-footer__links">
-      <a href={resumeHref} download>이력서 PDF 내려받기</a>
-      {siteProfile.github && <a href={siteProfile.github} rel="noreferrer">GitHub 보기</a>}
-    </div>
-  </div>
   <div class="page-shell site-footer__bottom">
-    <span>© 2026 심민우</span>
-    <span>Computer Vision · Data-Centric AI Portfolio</span>
+    <span>© 2026 SIM MINWOO · AI ENGINEER PORTFOLIO</span>
+    <div class="site-footer__links">
+      <a href={`mailto:${siteProfile.email}`}>{siteProfile.email}</a>
+      <a href={`tel:${siteProfile.phone.replaceAll('-', '')}`}>{siteProfile.phone}</a>
+      <a href={resumeHref} download>RESUME PDF</a>
+      {siteProfile.github && <a href={siteProfile.github} rel="noreferrer">GITHUB</a>}
+    </div>
   </div>
 </footer>

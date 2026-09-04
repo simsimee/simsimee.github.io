@@ -1,177 +1,260 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import DataPipeline from '@/components/DataPipeline.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import ProjectVisual from '@/components/ProjectVisual.astro';
-import { projects } from '@/data/projects';
+import DeckSlide from '@/components/DeckSlide.astro';
 import { siteProfile } from '@/data/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const href = (path: string) => `${base}${path}`;
 const assetHref = (path: string) => `${base}${path}`;
 const resumeHref = `${base}/${siteProfile.resumePath}`;
-const orderedProjects = [...projects].sort((a, b) => a.order - b.order);
-const featuredProjects = orderedProjects.slice(0, 3);
-const otherProjects = orderedProjects.slice(3);
+
+const selectedWork = [
+  { number: '01', title: 'Document Layout Analysis', year: '2025', result: '필터 후 학습 1,719~2,400장 / 특허 1건', type: 'CORE', href: '#project-01' },
+  { number: '02', title: '실시간 한글 손글씨 OCR', year: '2024', result: '실시간 추론, 정확도 83% / 특허 1건', type: 'CORE', href: '#project-02' },
+  { number: '03', title: '자율주행 데이터셋 최적화', year: '2022—2023', result: '13만→8만, mAP 0.64→0.85', href: '#project-03' },
+  { number: '04', title: '개인화 캐릭터 생성 AI', year: '2025', result: '검수 통과율 35%→85%', href: '#project-04' },
+  { number: '05', title: '멀티모달 Reasoning·QA 구축', year: '2025', result: '내부 검수 통과율 58%→86%', href: '#project-05' },
+  { number: '06', title: '정찰용 무인수상정 3D 합성', year: '2025—2026', result: '내부 합성 데이터 10,000건', href: '#project-06' }
+];
+
+type SupportingProject = {
+  id: string;
+  slideNumber: string;
+  projectNumber: string;
+  title: string;
+  meta: string;
+  problem: string;
+  problemBullets: string[];
+  role: string[];
+  steps: { title: string; detail: string }[];
+  note?: string;
+  results: { label: string; value: string; detail: string; delta?: string; compare?: [number, number] }[];
+};
+
+const supportingProjects: SupportingProject[] = [
+  {
+    id: 'project-03', slideNumber: '14', projectNumber: '03',
+    title: '에이모 · 자율주행 데이터셋 최적화',
+    meta: '자율주행팀 · 2022.02—2023.05 · 데이터 최적화·Active Learning·큐레이션 툴',
+    problem: '학습 기여도가 낮은 데이터가 수집·정제 비용을 늘림',
+    problemBullets: ['학습에 쓰이지 않을 데이터도 대량 저장', '날씨·조도·도로·가림 기준 정리가 필요', '중복·유사 이미지로 데이터 다양성 저하'],
+    role: ['조건 정의 · 추출 시스템 · 큐레이션 툴', 'FP/FN 분석'],
+    steps: [
+      { title: '데이터셋 최적화', detail: 'ISO 34503 ODD 정의·7건 실험·CLIP semi-auto labeling' },
+      { title: 'Active Learning 추출', detail: 'YOLOv5·Uncertainty Sampling으로 어려운 샘플 우선 확보' },
+      { title: '중복·유사 제거', detail: 'Vector DB 유사도 검색으로 중복 데이터 제거' },
+      { title: '큐레이션 툴', detail: 'ResNet·FAISS 인덱싱과 FiftyOne 시각화' }
+    ],
+    results: [
+      { label: '데이터셋 최적화', value: '13만 → 8만 장', detail: '약 40% 감소' },
+      { label: 'mAP', value: '0.64 → 0.85', detail: '개선 전 / 개선 후', compare: [64, 85] },
+      { label: 'AL 수집', value: '5일 → 2일', detail: '정제 비용 약 50% 절감' }
+    ]
+  },
+  {
+    id: 'project-04', slideNumber: '15', projectNumber: '04',
+    title: '개인화 캐릭터 생성 AI 파이프라인',
+    meta: '셀렉트스타 · 인물 사진 기반 생성형 이미지 · 2025.03—06 · 내부 PoC',
+    problem: '인물 → 캐릭터 변환에서 스타일 적용이 불안정',
+    problemBullets: ['기존 캐릭터 아이덴티티 유지 필요', '배경·손가락·관절 오류를 함께 검수', '수동 검수 없이는 서비스 적용이 어려움'],
+    role: ['5단계 파이프라인 단독 설계·구현', '검수 기준·예외 처리'],
+    steps: [
+      { title: '컨텍스트 추출', detail: '피부·헤어·의상·액세서리·포즈를 JSON으로 구조화' },
+      { title: '캐릭터 변환', detail: '구조화한 컨텍스트를 캐릭터 에셋에 적용하도록 파이프라인 수정' },
+      { title: '배경 제거', detail: '#00FF00 생성 후 OpenCV 크로마키 마스킹' },
+      { title: '로컬 검수', detail: '알파 채널 휴리스틱으로 실패 결과 1차 차단' },
+      { title: 'AI 검수', detail: '손가락·관절·비율 등 7개 기준 LLM-as-a-Judge' }
+    ],
+    note: '배경 제거 약 15초 이내 · 검수 통과 시에만 저장',
+    results: [
+      { label: '검수 통과율', value: '35% → 85%', detail: '개선 후 85%', delta: '+50%p', compare: [35, 85] },
+      { label: '이미지 변환 성공률', value: '98%', detail: '5단계 파이프라인 결과' },
+      { label: '품질 검수', value: '로컬 검사 → AI 검수', detail: '통과 결과만 저장' }
+    ]
+  },
+  {
+    id: 'project-05', slideNumber: '16', projectNumber: '05',
+    title: '멀티모달 Reasoning·QA 데이터셋 구축',
+    meta: '셀렉트스타 · SKT 컨소시엄 · 2025.08—12 · 독자 파운데이션 모델 학습 데이터 구축',
+    problem: '대량 생성에서도 데이터 품질 기준을 유지',
+    problemBullets: ['Reasoning 구조와 QA 품질 편차', '대량 생성 결과의 전수 검수 부담', '초기 휴먼 검수 통과율 58%'],
+    role: ['Reasoning 구조화 · QA 데이터 생성', '평가 루브릭 · 1차 모델 검수'],
+    steps: [
+      { title: 'Reasoning 구조화', detail: '파운데이션 모델 학습용 추론 구조 정리' },
+      { title: 'QA 데이터 생성', detail: '관련 논문의 고품질 데이터 생성 방법론 적용' },
+      { title: '평가 루브릭', detail: '검수 기준과 합격 조건 정의' },
+      { title: '1차 모델 검수', detail: '모델 검수 단계로 불합격 결과 선분리' }
+    ],
+    results: [
+      { label: '휴먼 검수 통과율', value: '58% → 86%', detail: '개선 전 / 개선 후', delta: '+28%p', compare: [58, 86] },
+      { label: '품질 관리', value: '평가 루브릭 + 1차 모델 검수', detail: '대량 생성 품질 유지' }
+    ]
+  },
+  {
+    id: 'project-06', slideNumber: '17', projectNumber: '06',
+    title: '정찰용 무인수상정 3D 합성 데이터',
+    meta: '셀렉트스타 · 2025.09—2026.07 · 3D 객체 생성·Image Composition · 내부 프로젝트',
+    problem: '수집이 불가능한 표적의 학습 데이터를 만들어야 함',
+    problemBullets: ['소량 실물·공개 이미지만 확보 가능', '한 장의 이미지로는 다양한 각도 확보가 어려움', '합성 출력과 원본 배경의 해상도가 다름'],
+    role: ['3D 객체 생성 · 다각도 렌더 · 해상도 정합', '데이터 생성 파이프라인 설계·운영'],
+    steps: [
+      { title: '3D 객체 생성', detail: 'TRELLIS로 단일 이미지를 3D 객체화' },
+      { title: '다각도 캡처', detail: '3D 객체를 여러 각도로 렌더링' },
+      { title: '해상도 정합', detail: '출력 크기 영역만 crop해 합성 후 원위치 paste' },
+      { title: '조건 분해', detail: '배경·위치·스케일·조도를 조합해 데이터 생성' }
+    ],
+    results: [
+      { label: '합성 데이터', value: '10,000건', detail: '정찰용 무인수상정 체계 내부 활용' },
+      { label: '생성 조건', value: '4개 조건', detail: '배경·위치·스케일·조도' },
+      { label: '운영', value: '내부 운영', detail: '보안·컴플라이언스 기준 반영' }
+    ]
+  }
+];
 ---
 
 <BaseLayout>
-  <section class="hero page-shell">
-    <div class="hero__identity">
-      <p class="hero__eyebrow">{siteProfile.positioning}</p>
-      <h1>
-        Computer Vision 모델의<br />
-        <span>데이터·학습·평가 설계</span>
-      </h1>
-    </div>
-    <div class="hero__statement">
-      <p>
-        Computer Vision 실무 4년+.<br />
-        모델 구조와 데이터 품질을 함께 개선하는 Data-Centric AI 접근.
-      </p>
-      <div class="hero__actions">
-        <a class="text-link" href="#projects">프로젝트 살펴보기 <span aria-hidden="true">↘</span></a>
-        <a class="text-link" href={resumeHref} download>이력서 PDF <span aria-hidden="true">↓</span></a>
+  <div class="deck" id="top">
+    <DeckSlide id="cover" kicker="SIM MINWOO · PORTFOLIO" number="2026" className="deck-cover" labelledby="cover-title">
+      <div class="deck-cover__lead">
+        <div><h1 id="cover-title">심민우</h1><p class="deck-cover__role">AI / ML Engineer</p></div>
+        <p class="deck-cover__statement">문서·이미지 데이터셋 생성 및 검증<br />OCR·VLM 모델 개발</p>
       </div>
-    </div>
-    <dl class="hero__metrics" aria-label="대표 성과">
-      <div>
-        <dt>Object Detection</dt>
-        <dd>0.64 → 0.85</dd>
-        <small>YOLOv5 · 최적화 데이터셋</small>
+      <figure class="deck-cover__portrait"><img src={assetHref('/images/profile.webp')} alt="AI/ML 엔지니어 심민우 프로필 사진" width="1122" height="1402" /></figure>
+      <div class="deck-cover__career">
+        <p class="deck-micro-label">CAREER</p>
+        <div class="deck-cover__career-row"><span>2024.05 — 현재</span><strong>셀렉트스타 · AI Research Engineer</strong><span>2021.12 — 2023.10</span><strong>에이모 · Data Scientist</strong></div>
       </div>
-      <div>
-        <dt>Cross-model Gain</dt>
-        <dd>+8.81</dd>
-        <small>YOLOv13·RF-DETR · 최대 mAP points</small>
-      </div>
-      <div>
-        <dt>Handwriting OCR</dt>
-        <dd>83%</dd>
-        <small>TrOCR · 평균 추론 0.07초</small>
-      </div>
-    </dl>
-  </section>
+      <address class="deck-cover__contact">
+        <a href={`mailto:${siteProfile.email}`}>{siteProfile.email}</a>
+        <a href={`tel:${siteProfile.phone.replaceAll('-', '')}`}>{siteProfile.phone}</a>
+        <a href={siteProfile.github} rel="noreferrer">github.com/simsimee</a>
+      </address>
+    </DeckSlide>
 
-  <section id="perspective" class="page-section page-shell perspective-section perspective-section--compact">
-    <SectionHeading
-      index="01"
-      label="Computer Vision · Data-Centric Workflow"
-      title="모델과 데이터를 함께 개선하는 네 단계"
-      description="Task·Metric 정의, Model 선택, Data Curation·Synthetic Data, Evaluation을 하나의 개선 루프로 연결."
-    />
-    <DataPipeline />
-  </section>
-
-  <section id="projects" class="page-section page-shell projects-section">
-    <SectionHeading
-      index="02"
-      label="Selected Projects"
-      title="대표 프로젝트 세 가지"
-      description="핵심 결과, 실제 산출물, 담당 범위 중심의 요약."
-    />
-
-    <div class="project-ledger">
-      {featuredProjects.map((project) => {
-        const featuredArtifact = project.artifacts?.find((artifact) => artifact.featured);
-        const selectedApproach = project.alternatives.find((alternative) => alternative.selected)?.name;
-        return (
-          <article class:list={['project-entry', `project-entry--${project.slug}`]}>
-            <div class="project-entry__meta">
-              <span>{String(project.order).padStart(2, '0')}</span>
-              <p>{project.category}</p>
-              <small>{project.organization}<br />{project.period}</small>
-            </div>
-            <div class="project-entry__body">
-              <p class="project-entry__impact">{project.resultLine}</p>
-              <h3>{project.title}</h3>
-              <dl class="project-entry__snapshot project-entry__snapshot--compact">
-                <div><dt>문제</dt><dd>{project.dataProblem.title}</dd></div>
-                <div><dt>핵심 결정</dt><dd>{selectedApproach}</dd></div>
-                <div><dt>담당 범위</dt><dd>{project.role}</dd></div>
-              </dl>
-              <div class="project-entry__metrics">
-                {project.metrics.slice(0, 2).map((metric) => (
-                  <div><strong>{metric.value}</strong><span>{metric.label}</span></div>
-                ))}
-              </div>
-              <div class="project-entry__footer">
-                <p><span>주요 모델·도구</span>{project.stacks.slice(0, 4).join(' · ')}</p>
-                <a
-                  class="project-link"
-                  href={href(`/projects/${project.slug}/`)}
-                  aria-label={`${project.shortTitle} 프로젝트 상세 보기`}
-                >
-                  프로젝트 상세 보기 <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </div>
-            {featuredArtifact ? (
-              <figure class="project-evidence-preview">
-                <img
-                  src={assetHref(featuredArtifact.src)}
-                  alt={featuredArtifact.alt}
-                  width={featuredArtifact.width}
-                  height={featuredArtifact.height}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <figcaption>
-                  <strong>실제 산출물</strong>
-                  <span>{featuredArtifact.title}</span>
-                </figcaption>
-              </figure>
-            ) : <ProjectVisual project={project} />}
-          </article>
-        );
-      })}
-    </div>
-  </section>
-
-  <section class="page-section page-shell other-projects-section">
-    <SectionHeading
-      index="03"
-      label="Other Work"
-      title="Document AI·OCR·Multimodal"
-      description="Computer Vision 하위 태스크와 Multimodal 학습 데이터 구축 경험."
-    />
-    <div class="other-projects">
-      {otherProjects.map((project) => (
-        <article>
-          <div>
-            <span>{String(project.order).padStart(2, '0')}</span>
-            <p>{project.category}</p>
+    <DeckSlide id="experience" kicker="EXPERIENCE" number="02" labelledby="experience-title">
+      <div class="deck-title deck-title--compact"><h2 id="experience-title">경력</h2><p>대표 프로젝트</p></div>
+      <div class="career-deck">
+        <article class="career-deck__company">
+          <div class="career-deck__identity"><span>2024.05 — 현재</span><div><h3>셀렉트스타</h3><p>AI Research Engineer</p></div></div>
+          <div class="career-deck__projects">
+            <div><span>2025.06—09</span><strong>Document Layout Analysis 합성 증강</strong><p>2 모델 · 3 도메인<br />비교 증강 방법론 중 Best mAP</p></div>
+            <div><span>2024.05—12</span><strong>실시간 한글 손글씨 OCR</strong><p>실사용 800장 평가 정확도 83%</p></div>
+            <div><span>2025—2026</span><strong>VLM 활용 변환 · 멀티모달 QA·3D 합성</strong><p>내부 PoC와 운영 자동화</p></div>
           </div>
-          <h3>{project.title}</h3>
-          <p>{project.resultLine}</p>
-          <a href={href(`/projects/${project.slug}/`)} aria-label={`${project.shortTitle} 프로젝트 상세 보기`}>
-            상세 보기 <span aria-hidden="true">→</span>
-          </a>
         </article>
-      ))}
-      <article>
-        <div>
-          <span>+</span>
-          <p>Multimodal Training Data</p>
-        </div>
-        <h3>Foundation Model Reasoning·QA 데이터셋</h3>
-        <p>평가 rubric과 1차 모델 검수 적용. Human Review 통과율 58% → 86%.</p>
-        <a href={href('/experience/#selectstar')} aria-label="멀티모달 학습 데이터셋 경력 보기">
-          경력에서 보기 <span aria-hidden="true">→</span>
-        </a>
-      </article>
-    </div>
-  </section>
+        <article class="career-deck__company">
+          <div class="career-deck__identity"><span>2021.12 — 2023.10</span><div><h3>에이모</h3><p class="is-orange">연구원 · 자율주행팀</p></div></div>
+          <div class="career-deck__projects">
+            <div><span>2022.06—2023.02</span><strong>Data-Centric 실험을 통한 데이터셋 최적화</strong><p>13만→8만, mAP 0.64→0.85</p></div>
+            <div><span>2022.02—2023.05</span><strong>Active Learning·임베딩 큐레이션</strong><p>수집 5일→2일, 정제비 약 50% 절감</p></div>
+          </div>
+        </article>
+      </div>
+    </DeckSlide>
 
-  <section class="page-section home-experience">
-    <div class="page-shell">
-      <ul aria-label="경력 요약">
-        <li><strong>4년+</strong><span>AI·Computer Vision 실무</span></li>
-        <li><strong>2건</strong><span>등록 특허</span></li>
-        <li><strong>2023</strong><span>상반기 성과우수자</span></li>
-        <li><strong>44시간</strong><span>대학 ML·DL 강의</span></li>
-      </ul>
-      <a class="text-link" href={href('/experience/')}>전체 경력 보기 <span aria-hidden="true">→</span></a>
-    </div>
-  </section>
+    <DeckSlide id="projects" kicker="SELECTED WORK" number="03" labelledby="projects-title">
+      <div class="deck-title deck-title--compact"><h2 id="projects-title">프로젝트</h2><p>DLA·OCR 주요 프로젝트 및 Supporting Work</p></div>
+      <div class="project-index">
+        {selectedWork.map((project) => (
+          <a class:list={['project-index__row', { 'is-core': project.type }]} href={project.href}>
+            <span>{project.number}</span><strong>{project.title}</strong><time>{project.year}</time><p>{project.result}</p><small>{project.type ?? ''}</small>
+          </a>
+        ))}
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="project-01" kicker="CORE PROJECT · OVERVIEW" number="04" className="project-overview" labelledby="project-01-title">
+      <div class="project-overview__title">
+        <div><p>PROJECT 01</p><h2 id="project-01-title">Document Layout Analysis</h2><small>문서 레이아웃 합성 증강 · 셀렉트스타 · 2025.06—09 · 기법 제안, 구현, 실험 설계, 평가</small></div><span>01</span>
+      </div>
+      <div class="overview-columns">
+        <article><h3>01&nbsp;&nbsp;문제</h3><p>도메인별 Raw Data 400장</p></article>
+        <article><h3>02&nbsp;&nbsp;해결 방법</h3><p>레이아웃 분포 기반 합성과<br />박스 라벨 자동 생성</p></article>
+        <article><h3>03&nbsp;&nbsp;결과</h3><p>두 모델·세 도메인<br />비교 증강 중 최고 mAP</p></article>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="dla-problem" kicker="PROJECT 01 · 01 문제" number="05" labelledby="dla-problem-title">
+      <div class="deck-title"><h2 id="dla-problem-title">도메인별 500장을 400 / 100으로 분리해 실험</h2><p>5배수 증강 ablation 진행 · 실제 학습 수량은 도메인별 차이</p></div>
+      <div class="visual-split visual-split--wide">
+        <figure class="deck-image-frame"><img src={assetHref('/images/projects/dla/augmentation-examples.png')} alt="문서 레이아웃 합성 증강 적용 예시" width="1142" height="482" loading="lazy" /></figure>
+        <div class="problem-panel"><p class="deck-micro-label">문제</p><ul class="square-list"><li>민감정보로 추가 수집과 외부 라벨링 제한</li><li>표·본문·제목의 위치와 크기가 도메인마다 다름</li><li>픽셀 기반 증강만으로 문서 배치 변화가 작음</li></ul><p class="deck-micro-label">필터 후 학습 수량</p><div class="metric-pair"><div><strong>2,400</strong><span>내부 데이터 / 도메인</span></div><div><strong>1,719~2,400</strong><span>DocLayNet / 도메인</span></div></div></div>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="dla-method" kicker="PROJECT 01 · 02 방법" number="06" labelledby="dla-method-title">
+      <div class="deck-title"><h2 id="dla-method-title">레이아웃 분포를 추정해 페이지와 박스를 재배치하는 합성 기법 제안</h2><p>직접 담당: 기법 제안 · 구현 · 실험 설계 · 평가</p></div>
+      <div class="visual-split visual-split--method">
+        <figure class="deck-image-frame deck-image-frame--contain"><img src={assetHref('/images/projects/dla/pipeline.png')} alt="문서 레이아웃 합성 증강 파이프라인" width="1151" height="631" loading="lazy" /></figure>
+        <ol class="numbered-notes"><li><span>01</span><div><strong>요소 추출</strong><p>본문·표·제목 crop과 의미 임베딩 저장</p></div></li><li><span>02</span><div><strong>분포 추정</strong><p>위치·크기·개수 분포를 KDE로 추정</p></div></li><li><span>03</span><div><strong>페이지 생성</strong><p>겹침·점유율 제약을 적용하고 가장 있을 법한 위치에 재배치하며 다양한 문서 생성</p></div></li></ol>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="dla-results" kicker="PROJECT 01 · 03 결과" number="07" labelledby="dla-results-title">
+      <div class="deck-title"><h2 id="dla-results-title">두 모델·세 도메인에서 비교 증강 방법론 중 가장 높은 mAP</h2><p>DocLayNet · mAP@50:95 · 동일 학습 조건</p></div>
+      <div class="visual-split visual-split--results">
+        <figure class="deck-image-frame deck-image-frame--contain"><img src={assetHref('/images/projects/dla/doclaynet-results.png')} alt="DocLayNet에서 모델과 증강 방법별 mAP 결과표" width="1210" height="985" loading="lazy" /></figure>
+        <div class="result-stack"><div><strong>0.7375 → 0.8049</strong><b>YOLOv13 평균 mAP</b><span>세 도메인 평균</span></div><div><strong>0.6390 → 0.6951</strong><b>RF-DETR 평균 mAP</b><span>세 도메인 평균</span></div><div><strong class="is-ink">+8.81%p</strong><b>baseline 대비 최대 개선</b></div></div>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="dla-reflection" kicker="PROJECT 01 · 04 회고" number="08" labelledby="dla-reflection-title">
+      <div class="deck-title"><h2 id="dla-reflection-title">문서 증강에서 바꾼 것은 픽셀이 아니라 배치</h2><p>프로젝트에서 확인한 점과 다음 실험</p></div>
+      <div class="reflection-columns">
+        <article><p class="deck-micro-label">확인한 점</p><h3>레이아웃을 바꾸면 Raw Data가 적더라도<br />학습 분포를 넓힐 수 있음</h3><ul class="square-list"><li>원본 요소를 재사용해 문서 질감 유지</li><li>무작위 재배치 대신 도메인 내 자주 쓰이는 위치를 분석해 확률적으로 재배치</li><li>서로 다른 모델에서도 개선됨을 확인</li></ul></article>
+        <article><p class="deck-micro-label">다음 실험</p><h3>성능 향상 원인을 분리해<br />다시 확인할 항목</h3><ul class="square-list"><li>레이아웃 분포 재현성</li><li>의미 유사도 기반 자산 선택 ablation / 일반화 ablation</li><li>저품질 스캔과 손상된 문서 평가</li></ul></article>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="project-02" kicker="CORE PROJECT · OVERVIEW" number="09" tone="orange" className="project-overview" labelledby="project-02-title">
+      <div class="project-overview__title">
+        <div><p>PROJECT 02</p><h2 id="project-02-title">실시간 한글 손글씨 OCR 모델 개발</h2><small>태블릿 손글씨 실시간 점검 · 셀렉트스타 · 2024.05—12 · 데이터 생성, TrOCR 학습, 오류 분석, 납품</small></div><span>02</span>
+      </div>
+      <div class="overview-columns"><article><h3>01&nbsp;&nbsp;프로젝트 목표</h3><p>태블릿 손글씨를<br />실시간으로 인식·점검</p></article><article><h3>02&nbsp;&nbsp;개발 중 문제</h3><p>실사용 학습 제한과<br />작성 중 문자열 조기 완성</p></article><article><h3>03&nbsp;&nbsp;해결 및 결과</h3><p>정확도 83%<br />평균 추론 0.07초</p></article></div>
+    </DeckSlide>
+
+    <DeckSlide id="ocr-data" kicker="PROJECT 02 · 01 개발 중 문제" number="10" tone="orange" labelledby="ocr-data-title">
+      <div class="deck-title"><h2 id="ocr-data-title">문제 1 · 실사용 데이터는 학습에 사용 불가</h2><p>평가용 800장은 분리하고 공개·사내·합성 데이터로 학습</p></div>
+      <div class="visual-split visual-split--ocr-data">
+        <figure class="deck-image-frame deck-image-frame--contain"><img src={assetHref('/images/projects/ocr/augmentation-samples.png')} alt="한글 손글씨에 다양한 증강을 적용한 예시" width="1132" height="737" loading="lazy" /></figure>
+        <div class="data-tally"><div><strong>519,550</strong><span>AI Hub</span></div><div><strong>63,000</strong><span>사내 수집·레이블링</span></div><div><strong>31,900</strong><span>폰트 기반 합성</span></div><div class="is-accent"><strong>800</strong><span>실사용 평가</span></div><p><b>해결 방법</b> 공개→사내→합성 손글씨 단계별 학습<br />생성 시 손글씨 범위 반영, 폰트·자간·행간·시작 위치 무작위 증강</p></div>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="ocr-tokenizer" kicker="PROJECT 02 · 02 개발 중 문제" number="11" tone="orange" labelledby="ocr-tokenizer-title">
+      <div class="deck-title"><h2 id="ocr-tokenizer-title">문제 2 · 작성 중인데 완성 문자열을 먼저 생성</h2><p>해결 방법: Character-level tokenizer로 한 글자 단위 디코딩</p></div>
+      <div class="tokenizer-columns">
+        <article><p class="deck-micro-label">기존 BPE Tokenizer</p><h3>부분 입력 뒤에 문자열을 임의로 생성</h3><dl><div><dt>입력</dt><dd>‘듣고 이해하’</dd></div><div class="is-risk"><dt>출력</dt><dd>‘듣고 이해하였음’</dd></div></dl><ul class="square-list"><li>subword 단위가 한글 손글씨 OCR에 불리</li><li>confidence가 높아도 잘못된 접미 문자열 생성</li></ul></article>
+        <article><p class="deck-micro-label">해결 방법</p><h3>입력 문자 단위로만 디코딩</h3><dl><div><dt>입력</dt><dd>‘듣고 이해하’</dd></div><div class="is-safe"><dt>출력</dt><dd>‘듣고 이해하’</dd></div></dl><ul class="square-list"><li>CustomTokenizer 직접 구현</li><li>기존 모델과 학습 코드 변경 범위 최소화</li></ul></article>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="ocr-results" kicker="PROJECT 02 · 03 결과" number="12" tone="orange" labelledby="ocr-results-title">
+      <div class="deck-title"><h2 id="ocr-results-title">실사용 800장 평가 정확도 83%, 평균 추론 0.07초</h2><p>오답 사례 별도 검토</p></div>
+      <div class="visual-split visual-split--ocr-results">
+        <figure class="deck-image-frame deck-image-frame--contain"><img src={assetHref('/images/projects/ocr/prediction-cases.png')} alt="한글 손글씨 OCR 예측 결과 네 건" width="850" height="650" loading="lazy" /></figure>
+        <div class="ocr-result-panel"><div class="metric-pair metric-pair--orange"><div><strong>83%</strong><span>Text Recognition Accuracy<small>실사용 800장 평가</small></span></div><div><strong>0.07초</strong><span>평균 추론 시간<small>0.04—0.1초</small></span></div></div><p class="deck-micro-label">오류 분석</p><ul class="square-list"><li>CER와 정규화 문장 정확도</li><li>카테고리·난이도·라벨 유형</li><li>confidence가 높은 오답 우선 검토</li></ul></div>
+      </div>
+    </DeckSlide>
+
+    <DeckSlide id="ocr-operations" kicker="PROJECT 02 · 04 운영 과제" number="13" tone="orange" labelledby="ocr-operations-title">
+      <div class="deck-title"><h2 id="ocr-operations-title">남은 문제 · 난독 필기의 오인식을 어떻게 판단할 것인가</h2><p>실시간 점검에서는 정답 생성뿐 아니라 보류 기준도 필요</p></div>
+      <div class="visual-split visual-split--operations">
+        <div class="operations-copy"><p class="deck-micro-label">문제</p><h3>필체가 무너지면 모델이 틀린 답을<br />높은 confidence로 출력</h3><p>의도는 해당 글을 썼으나 필체가 너무 무너져 인식이 안되는 경우</p><p class="deck-micro-label">대응</p><ul class="square-list"><li>confidence·난이도별 오류 분리</li><li>난독 필기의 보류 구간 검토</li><li>실패 유형을 다음 데이터 생성 조건에 반영</li></ul></div>
+        <figure class="deck-image-frame deck-image-frame--contain"><img src={assetHref('/images/projects/ocr/failure-cases.png')} alt="높은 confidence로 잘못 예측한 난독 손글씨 사례" width="810" height="500" loading="lazy" /></figure>
+      </div>
+    </DeckSlide>
+
+    {supportingProjects.map((project) => (
+      <DeckSlide id={project.id} kicker={`SUPPORTING PROJECT ${project.projectNumber}`} number={project.slideNumber} tone="olive" className="supporting-slide" labelledby={`${project.id}-title`}>
+        <div class="deck-title deck-title--supporting"><h2 id={`${project.id}-title`}>{project.title}</h2><p>{project.meta}</p></div>
+        <div class="supporting-grid">
+          <article class="supporting-problem"><h3><span>01</span>문제</h3><h4>{project.problem}</h4><ul class="square-list">{project.problemBullets.map((item) => <li>{item}</li>)}</ul><div class="supporting-role"><p>내 역할</p>{project.role.map((item) => <strong>{item}</strong>)}</div></article>
+          <article class="supporting-method"><h3><span>02</span>해결 방법</h3><ol>{project.steps.map((step, index) => (<li><span>{String(index + 1).padStart(2, '0')}</span><div><strong>{step.title}</strong><p>{step.detail}</p></div></li>))}</ol>{project.note && <p class="supporting-method__note">{project.note}</p>}</article>
+          <article class="supporting-results"><h3><span>03</span>결과</h3><div class="supporting-results__stack">{project.results.map((result) => (<div><p>{result.label}</p><strong>{result.value}</strong>{result.delta && <b>{result.delta}</b>}{result.compare && (<div class="compare-bars" aria-hidden="true"><i style={`--compare:${result.compare[0]}%`}></i><i class="is-after" style={`--compare:${result.compare[1]}%`}></i></div>)}<small>{result.detail}</small></div>))}</div></article>
+        </div>
+      </DeckSlide>
+    ))}
+  </div>
+
+  <div class="deck-end page-shell"><p>전체 프로젝트의 상세 구현과 실험 기록은 각 case study에서 확인할 수 있습니다.</p><div><a href={assetHref('/projects/dla/')}>DLA 상세</a><a href={assetHref('/projects/ocr/')}>OCR 상세</a><a href={resumeHref} download>이력서 PDF</a></div></div>
 </BaseLayout>

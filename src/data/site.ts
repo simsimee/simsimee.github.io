@@ -1,12 +1,13 @@
 export const siteProfile = {
   name: '심민우',
-  role: 'Computer Vision Engineer',
-  positioning: 'Computer Vision · Data-Centric AI · Generative Vision · Multimodal AI',
+  role: 'AI / ML Engineer',
+  positioning: '문서·이미지 데이터셋 생성 및 검증 · OCR·VLM 모델 개발',
   email: 'smw5626@gmail.com',
+  phone: '010-6880-5626',
   github: 'https://github.com/simsimee',
   resumePath: 'resume.pdf',
   description:
-    'Computer Vision 모델과 데이터를 함께 개선해 온 Data-Centric AI 엔지니어 심민우의 Object Detection·OCR·Generative Vision·Multimodal AI 포트폴리오.'
+    '문서·이미지 데이터셋 생성과 검증, OCR·VLM 모델 개발 경험을 정리한 AI/ML 엔지니어 심민우의 포트폴리오.'
 };
 
 export const pipelineStages = [

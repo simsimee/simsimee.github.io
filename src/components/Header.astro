@@ -3,20 +3,20 @@ import { siteProfile } from '@/data/site';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const href = (path: string) => `${base}${path}` || '/';
-const path = Astro.url.pathname;
 const navItems = [
+  { label: '경력', href: '/#experience' },
   { label: '프로젝트', href: '/#projects' },
-  { label: 'Workflow', href: '/#perspective' },
-  { label: '경력', href: '/experience/' },
-  { label: 'Profile', href: '/about/' }
+  { label: 'DLA', href: '/#project-01' },
+  { label: 'OCR', href: '/#project-02' },
+  { label: 'Supporting Work', href: '/#project-03' }
 ];
 ---
 
 <header class="site-header" data-site-header>
   <div class="site-header__inner page-shell">
     <a class="site-mark" href={href('/')} aria-label={`${siteProfile.name} 포트폴리오 홈`}>
-      <span class="site-mark__name">{siteProfile.name}</span>
-      <span class="site-mark__role">{siteProfile.role}</span>
+      <span class="site-mark__name">SIM MINWOO</span>
+      <span class="site-mark__role">PORTFOLIO</span>
     </a>
 
     <button
@@ -32,12 +32,7 @@ const navItems = [
 
     <nav id="primary-navigation" class="primary-nav" aria-label="주요 메뉴" data-navigation>
       {navItems.map((item) => (
-        <a
-          href={href(item.href)}
-          aria-current={!item.href.includes('#') && path.includes(item.href.replaceAll('/', '')) ? 'page' : undefined}
-        >
-          {item.label}
-        </a>
+        <a href={href(item.href)}>{item.label}</a>
       ))}
     </nav>
   </div>

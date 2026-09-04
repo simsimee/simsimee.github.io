@@ -1,0 +1,36 @@
+---
+type Tone = 'blue' | 'orange' | 'olive';
+
+type Props = {
+  id: string;
+  kicker: string;
+  number: string;
+  tone?: Tone;
+  className?: string;
+  labelledby?: string;
+};
+
+const {
+  id,
+  kicker,
+  number,
+  tone = 'blue',
+  className = '',
+  labelledby
+} = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={['deck-slide', `deck-slide--${tone}`, className]}
+  aria-labelledby={labelledby}
+>
+  <header class="deck-slide__chrome">
+    <span>{kicker}</span>
+    <span>{number}</span>
+  </header>
+  <div class="deck-slide__body">
+    <slot />
+  </div>
+  <footer class="deck-slide__folio">SIM MINWOO · AI ENGINEER PORTFOLIO</footer>
+</section>

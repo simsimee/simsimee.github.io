@@ -1,10 +1,11 @@
 # 심민우 · Computer Vision Engineer 포트폴리오
 
-Computer Vision을 중심으로 Data-Centric AI·Object Detection·OCR·Generative Vision·Multimodal AI 프로젝트를 정리한 GitHub Pages용 Astro 정적 포트폴리오입니다.
+`심민우_AI_Engineer_Portfolio_v10.pptx`의 16:9 레이아웃과 17개 섹션 흐름을 웹에 맞게 옮긴 GitHub Pages용 Astro 정적 포트폴리오입니다. 데스크톱에서는 슬라이드 비율을 유지하고, 태블릿·모바일에서는 같은 정보 구조를 세로형으로 재배치합니다.
 
 ## 콘텐츠 수정
 
 - 프로필·연락처: `src/data/site.ts`
+- PPT형 홈 구성: `src/pages/index.astro`
 - 프로젝트 상세 내용: `src/data/projects.ts`
 - 경력: `src/pages/experience.astro`
 - 소개: `src/pages/about.astro`
@@ -29,7 +30,7 @@ npm run dev
 
 ## 공개 전 확인
 
-- `src/data/site.ts`에 실제 GitHub URL 입력
+- `src/data/site.ts`의 이메일·전화번호·GitHub URL 확인
 - 회사·고객·데이터·특허의 공개 가능 범위 확인
 - 프로젝트 성과 수치와 평가 조건 최종 대조
 - 필요하면 `public/resume.pdf` 교체
